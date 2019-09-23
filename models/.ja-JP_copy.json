@@ -1,0 +1,59 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "データベース",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": [
+            "キャンセルして"
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": [
+            "ストップして"
+          ]
+        },
+        {
+          "name":"AnyIntent",
+          "slots":[
+            {
+              "name":"utterance",
+              "type":"any"
+            }
+          ],
+          "samples":[
+            "{utterance}"
+          ]
+          },{
+            "name":"RecordIntent",
+            "samples":[
+              "記録して"
+            ]
+          },
+          {
+            "name": "AMAZON.NavigateHomeIntent",
+            "samples": []
+          }
+        ],
+        "types": [
+          {
+            "name":"any",
+            "values":[
+              {
+                "name":{
+                  "value":"ほげほげ"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "version": "17"
+  }
