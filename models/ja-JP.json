@@ -58,6 +58,18 @@
                     ]
                 },
                 {
+                  "name": "SibilingIntent",
+                  "slots": [
+                      {
+                          "name": "sibiling",
+                          "type": "sibiling"
+                      }
+                  ],
+                  "samples": [
+                      "{sibiling}"
+                  ]
+                },
+                {
                     "name": "PlaceIntent",
                     "slots": [
                         {
@@ -87,6 +99,36 @@
                                 "value": "ほげほげ"
                             }
                         }
+                    ]
+                },
+                {
+                  "name": "sibiling",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "姉"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "妹"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "弟"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "兄"
+                            }
+                        }
+                    ],
+                    "samples": [
+                      "いません",
+                      "いないよ",
+                      "いない"
                     ]
                 }
             ]

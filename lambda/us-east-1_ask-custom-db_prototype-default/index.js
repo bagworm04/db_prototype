@@ -52,7 +52,7 @@ const ResponseIntentHandler = {
     var func = require('./sampleFunction.js');
     var aplDocument = require('./sampleFunction.js').doc;
 
-    var num = func.randInt(1);
+    var num = func.randInt(2);
     if(num == 0){
       console.log("int:0");
       var speechText = '生まれは西暦何年ですか';
@@ -61,15 +61,26 @@ const ResponseIntentHandler = {
       attributes.state = 'BirthYearIntentHandler';
       handlerInput.attributesManager.setSessionAttributes(attributes);
 
-    }else{
-      console.log("int:else");
+    }if else(num == 1){
+      console.log("int:1");
       var speechText = '生まれはどこですか';
 
       const attributes = handlerInput.attributesManager.getSessionAttributes();
       attributes.state = 'PlaceIntentHandler';
       handlerInput.attributesManager.setSessionAttributes(attributes);
 
+    }else{
+      console.log("int:else");
+
+      var speechText = '兄弟はいますか'
+
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.state = 'SibilingIntentHandler';
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+
     }
+
+
     const data =
     {
         myData: {
@@ -217,7 +228,44 @@ const PlaceIntentHandler = {
   },
 };
 
+const SibilingIntentHandler = {
+  canHandle(handlerInput){
+    console.log("SibilingIntentHandler");
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const request = handlerInput.requestEnvelope.request;
 
+    return attributes.state === 'SibilingIntentHandler' && request.type === 'IntentRequest';
+  },
+  handle(handlerInput){
+    const request = handlerInput.requestEnvelope.request;
+    let sibiling = request.intent.slots.sibiling.value;
+
+    const speechText = sibiling + 'ですか。教えていただきありがとうございます。';
+
+    var aplDocument = require('./sampleFunction.js').doc;
+    const data =
+    {
+        myData: {
+            title: speechText
+        }
+    }
+
+
+    return handlerInput.responseBuilder
+    .addDirective({
+          type : 'Alexa.Presentation.APL.RenderDocument',
+          version: '1.0',
+          document: aplDocument,
+          datasources: data
+      })
+    .speak(speechText)
+    //.reprompt(speechText)
+    .withShouldEndSession(true)
+    .getResponse();
+  },
+
+
+}
 
 
 const HelpIntentHandler = {
@@ -302,10 +350,11 @@ exports.handler = Alexa.SkillBuilders.custom()
   LaunchRequestHandler,
   DateIntentHandler,
   ResponseIntentHandler,
-  HelpIntentHandler,
   BirthYearIntentHandler,
   PlaceIntentHandler,
+  SibilingIntentHandler,
   CancelAndStopIntentHandler,
+  HelpIntentHandler,
   SessionEndedRequestHandler,
   IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
 )
