@@ -38,22 +38,24 @@ const LaunchRequestHandler = {
     .getResponse();
   }
 };
-const ResponseIntentHandler = {
+const FirstIntentHandler = {
   canHandle(handlerInput){
-    console.log("ResponseIntent");
+    console.log("FirstIntent");
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const request = handlerInput.requestEnvelope.request;
 
-    return Alexa.getIntentName(handlerInput.requestEnvelope) === 'ResponseIntent' && request.type === 'IntentRequest';
+    return Alexa.getIntentName(handlerInput.requestEnvelope) === 'FirstIntent' && request.type === 'IntentRequest';
   },
   handle(handlerInput){
-    //let value = handlerInput.requestEnvelope.request.intent.slots.item.value;
+      //let value = handlerInput.requestEnvelope.request.intent.slots.item.value;
 
-    var func = require('./sampleFunction.js');
-    var aplDocument = require('./sampleFunction.js').doc;
+      //var func = require('./sampleFunction.js');
+      var aplDocument = require('./sampleFunction.js').doc;
+      
+      //var num = func.randInt(3);
+      var num = 3;
 
-    var num = func.randInt(2);
-    if(num == 0){
+      if(num == 0){
       console.log("int:0");
       var speechText = '生まれは西暦何年ですか';
 
@@ -61,7 +63,7 @@ const ResponseIntentHandler = {
       attributes.state = 'BirthYearIntentHandler';
       handlerInput.attributesManager.setSessionAttributes(attributes);
 
-    }if else(num == 1){
+    }else if(num == 1){
       console.log("int:1");
       var speechText = '生まれはどこですか';
 
@@ -69,17 +71,23 @@ const ResponseIntentHandler = {
       attributes.state = 'PlaceIntentHandler';
       handlerInput.attributesManager.setSessionAttributes(attributes);
 
+    }else if(num == 2){
+      console.log("int:2");
+
+	var speechText = '兄弟はいますか';
+
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	attributes.state = 'SibilingIntentHandler';
+	handlerInput.attributesManager.setSessionAttributes(attributes);
+
     }else{
-      console.log("int:else");
+	console.log("int:3");
 
-      var speechText = '兄弟はいますか'
-
-      const attributes = handlerInput.attributesManager.getSessionAttributes();
-      attributes.state = 'SibilingIntentHandler';
-      handlerInput.attributesManager.setSessionAttributes(attributes);
-
+	var speechText = '好きな食べ物は何ですか';
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	attributes.state = 'ResponseIntentHandler';
+	handlerInput.attributesManager.setSessionAttributes(attributes);
     }
-
 
     const data =
     {
@@ -101,72 +109,21 @@ const ResponseIntentHandler = {
 };
 
 
-
-const BirthYearIntentHandler = {
+const ResponseIntentHandler = {
   canHandle(handlerInput){
-    console.log("BirthYearIntentHandler");
+    console.log("ResponseIntentHandler");
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const request = handlerInput.requestEnvelope.request;
 
-    return attributes.state === 'BirthYearIntentHandler' && request.type === 'IntentRequest';
+    return attributes.state === 'ResponseIntentHandler' && request.type === 'IntentRequest';
   },
 
   handle(handlerInput){
     const request = handlerInput.requestEnvelope.request;
-    let birth_year = request.intent.slots.year.value;
-    console.log(birth_year);
-    const speechText = birth_year + '年ですね。何月何日ですか';
-
-
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    attributes.year = birth_year;
-    attributes.state = 'DateIntentHandler';
-    handlerInput.attributesManager.setSessionAttributes(attributes);
-
-    var aplDocument = require('./sampleFunction.js').doc;
-    const data =
-    {
-        myData: {
-            title: speechText
-        }
-    }
-
-    return handlerInput.responseBuilder
-    .addDirective({
-          type : 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-          document: aplDocument,
-          datasources: data
-      })
-    .speak(speechText)
-    .reprompt(speechText)
-    .getResponse();
-  },
-};
-
-
-const DateIntentHandler = {
-  canHandle(handlerInput){
-    console.log("DateIntentHandler");
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const request = handlerInput.requestEnvelope.request;
-
-    return attributes.state === 'DateIntentHandler' && request.type === 'IntentRequest';
-  },
-
-  handle(handlerInput){
-    const request = handlerInput.requestEnvelope.request;
-    let value = request.intent.slots.date.value;
-    console.log(value);
-
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-
-    var func = require('./sampleFunction.js');
-    console.log(func);
-
-    let month_day = func.convDate(new Date(value),'MM月DD日')
-
-    const speechText = attributes.year +'年' +  month_day + 'ですか。教えていただきありがとうございます';
+    let response = request.intent.slots.utterance.value;
+    console.log(response);
+      
+    const speechText = response + 'ですか。教えていただきありがとうございます';
 
     var aplDocument = require('./sampleFunction.js').doc;
     const data =
@@ -189,83 +146,6 @@ const DateIntentHandler = {
     .getResponse()
   },
 };
-
-const PlaceIntentHandler = {
-  canHandle(handlerInput){
-    console.log("PlaceIntentHandler");
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const request = handlerInput.requestEnvelope.request;
-
-    return attributes.state === 'PlaceIntentHandler' && request.type === 'IntentRequest';
-  },
-
-  handle(handlerInput){
-    const request = handlerInput.requestEnvelope.request;
-    let place = request.intent.slots.place.value;
-
-    const speechText = place + 'ですか。教えていただきありがとうございます。';
-
-    var aplDocument = require('./sampleFunction.js').doc;
-    const data =
-    {
-        myData: {
-            title: speechText
-        }
-    }
-
-
-    return handlerInput.responseBuilder
-    .addDirective({
-          type : 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-          document: aplDocument,
-          datasources: data
-      })
-    .speak(speechText)
-    //.reprompt(speechText)
-    .withShouldEndSession(true)
-    .getResponse();
-  },
-};
-
-const SibilingIntentHandler = {
-  canHandle(handlerInput){
-    console.log("SibilingIntentHandler");
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const request = handlerInput.requestEnvelope.request;
-
-    return attributes.state === 'SibilingIntentHandler' && request.type === 'IntentRequest';
-  },
-  handle(handlerInput){
-    const request = handlerInput.requestEnvelope.request;
-    let sibiling = request.intent.slots.sibiling.value;
-
-    const speechText = sibiling + 'ですか。教えていただきありがとうございます。';
-
-    var aplDocument = require('./sampleFunction.js').doc;
-    const data =
-    {
-        myData: {
-            title: speechText
-        }
-    }
-
-
-    return handlerInput.responseBuilder
-    .addDirective({
-          type : 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-          document: aplDocument,
-          datasources: data
-      })
-    .speak(speechText)
-    //.reprompt(speechText)
-    .withShouldEndSession(true)
-    .getResponse();
-  },
-
-
-}
 
 
 const HelpIntentHandler = {
@@ -347,16 +227,13 @@ const ErrorHandler = {
 // defined are included below. The order matters - they're processed top to bottom.
 exports.handler = Alexa.SkillBuilders.custom()
 .addRequestHandlers(
-  LaunchRequestHandler,
-  DateIntentHandler,
-  ResponseIntentHandler,
-  BirthYearIntentHandler,
-  PlaceIntentHandler,
-  SibilingIntentHandler,
-  CancelAndStopIntentHandler,
-  HelpIntentHandler,
-  SessionEndedRequestHandler,
-  IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
+    LaunchRequestHandler,
+    FirstIntentHandler,
+    ResponseIntentHandler,
+    CancelAndStopIntentHandler,
+    HelpIntentHandler,
+    SessionEndedRequestHandler,
+    IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
 )
 
 .withPersistenceAdapter(DynamoDBAdapter)
