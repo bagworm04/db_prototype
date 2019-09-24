@@ -27,3 +27,21 @@ module.exports.doc = {
         }
     }
 }
+
+module.exports.ResponseIntentHandler = {
+    canHandle(handlerInput){
+	console.log("ResponseIntent");
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	const request = handlerInput.requestEnvelope.request;
+
+	return Alexa.getIntentName(handlerInput.requestEnvelope) === 'ResponseIntent' && request.type === 'IntentRequest';
+    },
+    handle(handlerInput){
+
+	var speechText = "こんにちは。テストは成功です";
+	
+	return handlerInput.responseBuilder
+	    .speak(speechText)
+	    .getResponse();
+    },
+}
