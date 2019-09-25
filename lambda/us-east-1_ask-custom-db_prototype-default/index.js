@@ -61,7 +61,7 @@ const ResponseIntentHandler = {
       attributes.state = 'BirthYearIntentHandler';
       handlerInput.attributesManager.setSessionAttributes(attributes);
 
-    }if else(num == 1){
+    }else if(num == 1){
       console.log("int:1");
       var speechText = '生まれはどこですか';
 
