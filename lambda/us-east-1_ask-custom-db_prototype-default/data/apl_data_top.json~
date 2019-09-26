@@ -1,0 +1,25 @@
+{
+  "skilldata":{
+    "type":"object",
+    "image":[
+      {
+        "icon":"https://www.drk7.jp/MT/drk/images/130330/DSC07204.jpg",
+        "name":"ボタン1"
+      },
+      {
+        "icon":"https://slack-redir.net/link?url=https%3A%2F%2Fspika-nm.c.blog.so-net.ne.jp%2F_images%2Fblog%2F_8e9%2Fspika-nm%2F2012042220055.jpg",
+        "name":"ボタン2"
+      }
+    ],
+    "properties":{
+      "Ssml_0":"<speak>タップしてください</speak>"
+    },
+    "transformers":[
+      {
+        "inputPath":"Ssml_0",
+        "outputName":"Speech_0",
+        "transformer":"ssmlToSpeech"
+      }
+    ]
+  }
+}
