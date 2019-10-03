@@ -103,6 +103,26 @@ const ResponseIntentHandler = {
   },
 };
 
+const TouchEventHandler = {
+    canHandle(h: Alexa.HandlerInput){
+	const request = h.requestEnvelope.request;
+	return (( request.type === 'Alexa.Presentation.APL.UserEvent' && (request.source.handler === 'Press' || request.source.handler === 'onPress')));
+    },
+    handle(h: Alexa.HandlerInput){
+	const request = h.requestEnvelople.request;
+	if(request.arguments){
+	    //request.arguments[0]には"button"が入っている
+	    const speechText = '${request.arguments[0]}がタップされました'
+	    return h.responseBuilder
+		.speak(speechText)
+		.withShouldEndSession(true)
+		.getResponse();
+	}
+    }
+    throw new Error("error");
+};
+
+
 
 
 const BirthYearIntentHandler = {
