@@ -15,14 +15,35 @@ const LaunchRequestHandler = {
   canHandle(handlerInput) {
     return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
   },
-  handle(handlerInput) {
+  async handle(handlerInput) {
 
-      var shuffle_module =require('./make_json.js').shuffle_photos();
-      //shuffle_module.shuffle_photos();
+
+      let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes();
+      let cnt = persistentAttributes.cnt;
+      
+      var obj = {
+	  Day: "Monday",
+	  Items:[
+              "Coffee",
+              "Orange",
+              "Milk"
+	  ]
+      }
+      var shuffle_module =require('./make_json.js').shuffle_photos(cnt);
+      cnt += 1;
+
+      handlerInput.attributesManager.setPersistentAttributes({obj,cnt:cnt});
+      await handlerInput.attributesManager.savePersistentAttributes();
+      
+      
       var data = require('./make_json.js').get_json();
       console.log(data);
       
       const speechText = 'データベーススキルです。こんにちは大竹さん。データベースで記録してといってください。';
+
+
+      
+
       
       /*  
 	  var aplDocument = require('./sampleFunction.js').doc;
