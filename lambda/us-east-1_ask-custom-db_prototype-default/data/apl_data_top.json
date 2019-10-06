@@ -1,25 +1,25 @@
 {
-  "skilldata":{
-    "type":"object",
-    "image":[
-      {
-        "icon":"https://ea71e153.ngrok.io/flog.jpg",
-        "name":"ボタン1"
-      },
-      {
-        "icon":"https://ea71e153.ngrok.io/flog2.jpg",
-        "name":"ボタン2"
-      }
-    ],
-    "properties":{
-      "Ssml_0":"<speak>タップしてください</speak>"
-    },
-    "transformers":[
-      {
-        "inputPath":"Ssml_0",
-        "outputName":"Speech_0",
-        "transformer":"ssmlToSpeech"
-      }
-    ]
-  }
+ "skilldata": {
+  "type": "object",
+  "image": [
+   {
+    "icon": "https://www.newsweekjapan.jp/stories/assets_c/2017/04/iStock-501152239b-thumb-720xauto-110669.jpg",
+    "name": "ボタン1"
+   },
+   {
+    "icon": "https://www.pref.chiba.lg.jp/kouhou/kids/chi-bakun/sorakara/documents/city-l_kids.png",
+    "name": "ボタン2"
+   }
+  ],
+  "properties": {
+   "Ssml_0": "<speak>タップしてください</speak>"
+  },
+  "transformers": [
+   {
+    "inputPath": "Ssml_0",
+    "outputName": "Speech_0",
+    "transformer": "ssmlToSpeech"
+   }
+  ]
+ }
 }
