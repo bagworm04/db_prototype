@@ -11,8 +11,8 @@
     "resources": [
         {
             "strings": {
-                "skillName": "ボタンテスト",
-                "menuText": "該当するメニューをタップしてください。"
+                "skillName": "E-note photos",
+                "menuText": "気になる写真をタップしてください。"
             }
         }
     ],
@@ -31,13 +31,13 @@
                         "type": "Frame",
                         "width": "100vw",
                         "height": "100vh",
-                        "backgroundColor": "#999999"
+                        "backgroundColor": "#eeeeee"
                     },
                     {
                         "type": "Frame",
                         "width": "100vw",
-                        "height": "15vh",
-                        "backgroundColor": "#b52e29",
+                        "height": "10vh",
+                        "backgroundColor": "#ffcc66",
                         "position": "absolute"
                     },
                     {
@@ -46,11 +46,17 @@
                         "items": [
                             {
                                 "type": "Text",
-                                "text": "@skillName",
-                                "height": "15vh",
-                                "paddingLeft": "4vw",
-                                "textAlignVertical": "center"
-                            },
+				"height":"10vh",
+				"textAlign":"center",
+				"textAlignVertical":"center",
+				"color":"#1e2222",
+				"fontStyle":"italic",
+				"fontFamily":"fontFamilyRomanSerif",
+				"fontSize":"50",
+				"text":"@skillName",
+				"fontWeight":"bold",
+				"letterSpacing":"10"
+			    },
                             {
                                 "type": "Container",
                                 "alignItems": "center",
@@ -85,7 +91,8 @@
                                 "id": "SpeechComponent_0",
                                 "speech": "${payload.skilldata.properties.Speech_0}",
                                 "text": "@menuText",
-                                "textAlign": "center"
+                                "textAlign": "center",
+				"color":"#1e2222"
                             }
                         ]
                     }

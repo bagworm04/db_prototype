@@ -16,29 +16,34 @@ const LaunchRequestHandler = {
     return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
   },
   handle(handlerInput) {
-    const speechText = 'データベーススキルです。こんにちは大竹さん。データベースで記録してといってください。';
 
-    /*  
-    var aplDocument = require('./sampleFunction.js').doc;
-    const data =
-    {
-        myData: {
-            title: speechText
-        }
-    }
-
-    */
+      var shuffle_module =require('./make_json.js').shuffle_photos();
+      //shuffle_module.shuffle_photos();
+      var data = require('./make_json.js').get_json();
+      console.log(data);
       
-    return handlerInput.responseBuilder
-    .addDirective({
-          type : 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-        document: require('./document/apl_doc_top.json'),
-        datasources: require('./data/apl_data_top.json')
-      })
-    .speak(speechText)
-    //.reprompt(speechText)
-    .getResponse();
+      const speechText = 'データベーススキルです。こんにちは大竹さん。データベースで記録してといってください。';
+      
+      /*  
+	  var aplDocument = require('./sampleFunction.js').doc;
+	  const data =
+	  {
+          myData: {
+          title: speechText
+          }
+	  }
+	  
+      */
+      return handlerInput.responseBuilder
+	  .addDirective({
+	      type : 'Alexa.Presentation.APL.RenderDocument',
+	      version: '1.0',
+	      document: require('./document/apl_doc_top.json'),
+	      datasources: data 
+	  })
+	  .speak(speechText)
+      //.reprompt(speechText)
+	  .getResponse();
   }
 };
 

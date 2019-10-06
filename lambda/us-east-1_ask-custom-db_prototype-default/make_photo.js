@@ -6,14 +6,15 @@ var fs = require('fs');
 
 var path = require('path');
 
-var request_path = './data/apl_data_top.json';
+var request_name =  'apl_data_top' ;
+
+var request_write_path = '/tmp/'+ request_name + '.json';
 
 var json = JSON.parse(
     fs.readFileSync(
-	path.resolve(__dirname, request_path)
+	path.resolve(__dirname, './data/'+request_name +'.json')
     )
 );
-
 
 var array_url = [
     "https://www.pref.chiba.lg.jp/kouhou/kids/chi-bakun/sorakara/documents/city-l_kids.png",
@@ -28,6 +29,8 @@ var medicine_photo_url = [
     "https://ea71e153.ngrok.io/flog2.jpg"
 ]
 
+
+
 console.log(json)
 //console.log(json.skilldata.image.length);
 
@@ -40,7 +43,27 @@ for(let i=0;i<json.skilldata.image.length; i++){
 }
 
 fs.writeFileSync(
-    path.resolve(__dirname, request_path),
+    path.resolve(__dirname, request_write_path),
     JSON.stringify(json,null,' '),
     'utf-8'
 );
+
+fs.copyFile(request_write_path, './data/' + request_name + '.json', (err) => {
+    if (err) {
+	console.log(err.stack);
+    }
+    else {
+	console.log('Done.');
+    }
+});
+
+module.exports.shuffle_photos = async function(){
+    for(let i=0;i<json.skilldata.image.length; i++){
+	//console.log(i);
+	//console.log(json.skilldata.image[i].icon);
+	var rand_num = getRandomInt(5)
+	console.log(rand_num)
+	json.skilldata.image[i].icon = array_url[rand_num] 
+    }
+}
+
