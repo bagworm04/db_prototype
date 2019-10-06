@@ -41,6 +41,39 @@ const LaunchRequestHandler = {
     .getResponse();
   }
 };
+
+const TouchEventHandler = {
+    canHandle(handlerInput){
+	return ((handlerInput.requestEnvelope.request.type === 'Alexa.Presentation.APL.UserEvent' && (handlerInput.requestEnvelope.request.source.handler === 'Press' || handlerInput.requestEnvelope.request.source.handler === 'onPress')));
+    },
+    handle(handlerInput){
+	console.log('touchevent')
+	const choice = handlerInput.requestEnvelope.request.arguments[0];
+	console.log(choice);
+	const speechText = choice + 'をタップしました'
+	/*
+	var aplDocument = require('./sampleFunction.js').doc;
+	const data =
+	      {
+		  myData: {
+		      title: speechText
+		  }
+	      }
+	*/
+	
+	return handlerInput.responseBuilder
+	  /*  .addDirective({
+		type : 'Alexa.Presentation.APL.RenderDocument',
+		version: '1.0',
+		document: aplDocument,
+		datasources: data
+	    })*/
+	    .speak(speechText)
+	    .getResponse();
+    }
+};
+
+
 const ResponseIntentHandler = {
   canHandle(handlerInput){
     console.log("ResponseIntent");
@@ -102,27 +135,6 @@ const ResponseIntentHandler = {
     .getResponse();
   },
 };
-
-const TouchEventHandler = {
-    canHandle(h: Alexa.HandlerInput){
-	const request = h.requestEnvelope.request;
-	return (( request.type === 'Alexa.Presentation.APL.UserEvent' && (request.source.handler === 'Press' || request.source.handler === 'onPress')));
-    },
-    handle(h: Alexa.HandlerInput){
-	const request = h.requestEnvelople.request;
-	if(request.arguments){
-	    //request.arguments[0]には"button"が入っている
-	    const speechText = '${request.arguments[0]}がタップされました'
-	    return h.responseBuilder
-		.speak(speechText)
-		.withShouldEndSession(true)
-		.getResponse();
-	}
-    }
-    throw new Error("error");
-};
-
-
 
 
 const BirthYearIntentHandler = {
@@ -356,7 +368,7 @@ const ErrorHandler = {
   },
   handle(handlerInput, error) {
     console.log(`~~~~ Error handled: ${error.stack}`);
-    const speechText = `Sorry, I had trouble doing what you asked. Please try again.`;
+    const speechText = 'Sorry, I had trouble doing what you asked. Please try again.'
 
     return handlerInput.responseBuilder
     .speak(speechText)
@@ -370,16 +382,17 @@ const ErrorHandler = {
 // defined are included below. The order matters - they're processed top to bottom.
 exports.handler = Alexa.SkillBuilders.custom()
 .addRequestHandlers(
-  LaunchRequestHandler,
-  DateIntentHandler,
-  ResponseIntentHandler,
-  BirthYearIntentHandler,
-  PlaceIntentHandler,
-  SibilingIntentHandler,
-  CancelAndStopIntentHandler,
-  HelpIntentHandler,
-  SessionEndedRequestHandler,
-  IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
+    LaunchRequestHandler,
+    TouchEventHandler,
+    DateIntentHandler,
+    ResponseIntentHandler,
+    BirthYearIntentHandler,
+    PlaceIntentHandler,
+    SibilingIntentHandler,
+    CancelAndStopIntentHandler,
+    HelpIntentHandler,
+    SessionEndedRequestHandler,
+    IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
 )
 
 .withPersistenceAdapter(DynamoDBAdapter)

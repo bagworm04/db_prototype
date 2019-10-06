@@ -67,7 +67,7 @@
                                             "onPress": {
                                                 "type": "SendEvent",
                                                 "arguments": [
-                                                    "ボタンが押されました。データは${data.name}です"
+                                                    "${data.name}"
                                                 ]
                                             },
                                             "item": {
