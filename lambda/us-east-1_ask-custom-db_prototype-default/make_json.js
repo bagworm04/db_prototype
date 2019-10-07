@@ -32,9 +32,7 @@ function get_image_json(num){
 var array_url = [
     "https://www.pref.chiba.lg.jp/kouhou/kids/chi-bakun/sorakara/documents/city-l_kids.png",
     "http://maruchiba.jp/miryoku/character/images/img_01_l.jpg",
-    "https://www.newsweekjapan.jp/stories/assets_c/2017/04/iStock-501152239b-thumb-720xauto-110669.jpg",
-    "https://ea71e153.ngrok.io/flog.jpg",
-    "https://ea71e153.ngrok.io/flog2.jpg"
+    "https://www.newsweekjapan.jp/stories/assets_c/2017/04/iStock-501152239b-thumb-720xauto-110669.jpg"
 ]
 
 var medicine_photo_url = [
@@ -43,23 +41,28 @@ var medicine_photo_url = [
 ]
 
 module.exports.shuffle_photos = function(excute_count){
-    console.log("excute_count:"+excute_count);
-    console.log(json);
-    console.log(get_image_json(excute_count+1));
 
+    console.log("from make_json, excute_count:"+ JSON.stringify(excute_count));
+    console.log("from make_json, excute:"+excute_count + JSON.stringify(json));
+    console.log("from make_json, excute:"+excute_count+ "get_image_json" + JSON.stringify(get_image_json(excute_count+1)));
     
-    console.log(json);
-    
-    var rand_num = getRandomInt(5)
-    
-    for(let i=0;i<excute_count; i++){
+    //var rand_num = getRandomInt(5)
+    //var rand_num = excute_count;
 
-	json.skilldata.image[i] = JSON.parse(get_image_json(i+1));
-	rand_num = (rand_num+1)%5;
-	console.log(rand_num)
-	json.skilldata.image[i].icon = array_url[rand_num] 
+    if(excute_count >= 1){
+	json.skilldata['image'].push(JSON.parse(get_image_json(excute_count % 5)));
+	
+	json.skilldata.image[excute_count-1].icon = array_url[getRandomInt(3)]
+
     }
- 
+
+    /*
+    for(var i=0; i<json.skilldata['image'].length ; i++){
+	json.skilldata.image[i].icon = array_url[] 
+	}*/
+    
+    console.log("from make_json, excute:" + excute_count+ "\n"+JSON.stringify(json));
+    
 }
 
 

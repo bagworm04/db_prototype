@@ -5,7 +5,6 @@ const Alexa = require('ask-sdk-core');
 
 const Adapter = require('ask-sdk-dynamodb-persistence-adapter');
 
-
 const config = {tableName: 'db_prototype', // <= DynamoDBのテーブル名
 createTable: true}; // <= テーブルを自動生成する場合true (ただし権限が必要)
 const DynamoDBAdapter = new Adapter.DynamoDbPersistenceAdapter(config);
@@ -17,32 +16,21 @@ const LaunchRequestHandler = {
   },
   async handle(handlerInput) {
 
-
       let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes();
-      let cnt = persistentAttributes.cnt;
-      
-      var obj = {
-	  Day: "Monday",
-	  Items:[
-              "Coffee",
-              "Orange",
-              "Milk"
-	  ]
-      }
+      let cnt = (persistentAttributes.cnt|0);
+
+      console.log("from_index, dynamodb_cnt:" + cnt);
       var shuffle_module =require('./make_json.js').shuffle_photos(cnt);
       cnt += 1;
-
-      handlerInput.attributesManager.setPersistentAttributes({obj,cnt:cnt});
+      
+      handlerInput.attributesManager.setPersistentAttributes({cnt:cnt});
       await handlerInput.attributesManager.savePersistentAttributes();
       
       
       var data = require('./make_json.js').get_json();
-      console.log(data);
+      console.log("from_index, get_json;" + "\n" + JSON.stringify(data));
       
       const speechText = 'データベーススキルです。こんにちは大竹さん。データベースで記録してといってください。';
-
-
-      
 
       
       /*  
