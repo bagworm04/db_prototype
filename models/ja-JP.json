@@ -19,33 +19,16 @@
                         "ストップして"
                     ]
                 },
+		{
+		    "name":"FirstIntent",
+		    "samples":[
+			"記録して",
+			"記録",
+			"記憶して"
+		    ]
+		},
                 {
-                    "name": "BirthYearIntent",
-                    "slots": [
-                        {
-                            "name": "year",
-                            "type": "AMAZON.FOUR_DIGIT_NUMBER"
-                        }
-                    ],
-                    "samples": [
-                        "{year} 年"
-                    ]
-                },
-                {
-                    "name": "DateIntent",
-                    "slots": [
-                        {
-                            "name": "date",
-                            "type": "AMAZON.DATE"
-                        }
-                    ],
-                    "samples": [
-                        "{date} 月 {date} 日",
-                        "{date} 月"
-                    ]
-                },
-                {
-                    "name": "ResponseIntent",
+                    "name": "AnythingIntent",
                     "slots": [
                         {
                             "name": "utterance",
@@ -55,22 +38,6 @@
                     "samples": [
                         "ほげほげ",
                         "{utterance}"
-                    ]
-                },
-                {
-                    "name": "PlaceIntent",
-                    "slots": [
-                        {
-                            "name": "place",
-                            "type": "AMAZON.City"
-                        }
-                    ],
-                    "samples": [
-                        "{place} 県",
-                        "{place} 市",
-                        "{place} 町",
-                        "{place} 村",
-                        "{place} 区"
                     ]
                 },
                 {
