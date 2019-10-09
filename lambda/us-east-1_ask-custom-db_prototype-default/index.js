@@ -18,32 +18,49 @@ const LaunchRequestHandler = {
     async handle(handlerInput) {
 	
 	let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes();
-	const lifestyle_attributes_json = persistentAttributes['lifestyle'];
-	let count = (persistentAttributes.count | 0);
-	
+	var attributes_json = persistentAttributes;
+
 	
 	const attributes = handlerInput.attributesManager.getSessionAttributes();
 	
-	
-	var rand_num = require('./sampleFunction.js').randInt(3);
-	
-	console.log("from index_js : " + lifestyle_attributes_json);
-	console.log("from index_js : " + JSON.stringify(lifestyle_attributes_json));
 
-	console.log("from index_js : " + lifestyle_attributes_json[rand_num].secondPhrase);
-	console.log("from index_js : " + JSON.stringify(lifestyle_attributes_json[rand_num]['secondPhrase']));
-	console.log("from index_js : " + lifestyle_attributes_json[rand_num].firstPhrase + ' は '+ lifestyle_attributes_json[rand_num].secondPhrase + "  ですか");
+	
+	const func = require('./sampleFunction.js');
+
+	var item = func.hasNullInMyself(persistentAttributes);
+	
+	console.log("from index_js : "+ item);
+
+
+	
+	if(item >=0 ){
+	    attributes_json = persistentAttributes['myself'];
+
+	    var selected_num = item;
+	    
+	}else{
+	    attributes_json = persistentAttributes['lifestyle'];
+   
+	    var selected_num = require('./sampleFunction.js').randInt(attributes_json.length-1);
+	    console.log("from index_js :" + selected_num);
+	}
+	    	
+
+	let count = (persistentAttributes.count | 0);
+			
+	
+	console.log("from index_js : " + attributes_json[selected_num].firstPhrase + ' は '+ attributes_json[selected_num].secondPhrase + "  ですか");
 	
 	
-	var state_num = lifestyle_attributes_json[rand_num]['state'];
+	var state_num = attributes_json[selected_num]['state'];
 	
-	const speechText = 'データベーススキルです。こんにちは大竹さん。'+ lifestyle_attributes_json[rand_num]['firstPhrase'] +'は' + lifestyle_attributes_json[rand_num]['secondPhrase'] +'ですか';
+	const speechText = 'データベーススキルです。こんにちは大竹さん。'+ attributes_json[selected_num]['firstPhrase'] +'は' + attributes_json[selected_num]['secondPhrase'] +'ですか';
 	
 	count += 1;
 
-	attributes.rand_num = rand_num;
+	attributes.selected_num = selected_num;
 
-	attributes.counter = count;
+	attributes.count = count;
 	
 	//DB向けのアトリビュート
 	//handlerInput.attributesManager.setPersistentAttributes({count:count});
@@ -130,9 +147,12 @@ const AnythingIntentHandler = {
 	//handlerInput.attributesManager.setPersistenAttributes({lifestyle[attributes.rand_num]['response'][0]:reply_json});
 
 	
-	persistentAttributes['lifestyle'][attributes.rand_num]['response'].push(reply_json);
+	persistentAttributes['lifestyle'][attributes.selected_num]['response'].push(reply_json);
 
 	const new_json = persistentAttributes;
+
+	console.log("from index_js attribute.count : "+ attributes.count);
+	persistentAttributes['count'] = attributes.count;
 	
 	console.log("from index_json : " + new_json);
 	handlerInput.attributesManager.setPersistentAttributes(new_json);
@@ -162,131 +182,182 @@ const AnythingIntentHandler = {
 };
 
 const BirthYearIntentHandler = {
-  canHandle(handlerInput){
-    console.log("BirthYearIntentHandler");
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const request = handlerInput.requestEnvelope.request;
+    canHandle(handlerInput){
+	console.log("BirthYearIntentHandler");
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	const request = handlerInput.requestEnvelope.request;
+	
+	return attributes.state === 'BirthYearIntentHandler' && request.type === 'IntentRequest';
+    },
+    
+    async handle(handlerInput){
+	const request = handlerInput.requestEnvelope.request;
+	let birth_year = request.intent.slots.year.value;
+	console.log(birth_year);
+	
+	let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes();
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    return attributes.state === 'BirthYearIntentHandler' && request.type === 'IntentRequest';
-  },
+	
+	var dateTime = new Date()
+	
+	let reply_json = {
+	    "reply":birth_year,
+	    "time": JSON.stringify(dateTime)
+	}
+	
+      	console.log(reply_json);
+	console.log(JSON.stringify(reply_json));
 
-  handle(handlerInput){
-    const request = handlerInput.requestEnvelope.request;
-    let birth_year = request.intent.slots.year.value;
-    console.log(birth_year);
-    const speechText = birth_year + '年ですね。何月何日ですか';
+	
+	persistentAttributes['myself'][attributes.selected_num]['response'].push(reply_json);
 
-
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    attributes.year = birth_year;
-    attributes.state = 'DateIntentHandler';
-    handlerInput.attributesManager.setSessionAttributes(attributes);
-
-    var aplDocument = require('./sampleFunction.js').doc;
-    const data =
-    {
-        myData: {
-            title: speechText
-        }
-    }
-
-    return handlerInput.responseBuilder
-    .addDirective({
-          type : 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-          document: aplDocument,
-          datasources: data
-      })
-    .speak(speechText)
-    .reprompt(speechText)
-    .getResponse();
-  },
+	persistentAttributes['count'] = attributes.count;
+	
+	console.log("from index_json : " + persistentAttributes);
+	handlerInput.attributesManager.setPersistentAttributes(persistentAttributes);
+	
+	await handlerInput.attributesManager.savePersistentAttributes();
+	
+	const speechText = birth_year + '年ですね。何月何日ですか';
+	
+	
+	attributes.year = birth_year;
+	attributes.state = 'DateIntentHandler';
+	handlerInput.attributesManager.setSessionAttributes(attributes);
+	
+	var aplDocument = require('./sampleFunction.js').doc;
+	const data =
+	      {
+		  myData: {
+		      title: speechText
+		  }
+	      }
+	
+	return handlerInput.responseBuilder
+	    .addDirective({
+		type : 'Alexa.Presentation.APL.RenderDocument',
+		version: '1.0',
+		document: aplDocument,
+		datasources: data
+	    })
+	    .speak(speechText)
+	    .reprompt(speechText)
+	    .getResponse();
+    },
 };
 
 
 const DateIntentHandler = {
-  canHandle(handlerInput){
-    console.log("DateIntentHandler");
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const request = handlerInput.requestEnvelope.request;
-
-    return attributes.state === 'DateIntentHandler' && request.type === 'IntentRequest';
-  },
-
-  handle(handlerInput){
-    const request = handlerInput.requestEnvelope.request;
-    let value = request.intent.slots.date.value;
-    console.log(value);
-
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-
-    var func = require('./sampleFunction.js');
-    console.log(func);
-
-    let month_day = func.convDate(new Date(value),'MM月DD日')
-
-    const speechText = attributes.year +'年' +  month_day + 'ですか。教えていただきありがとうございます';
-
-    var aplDocument = require('./sampleFunction.js').doc;
-    const data =
-    {
-        myData: {
-            title: speechText
-        }
-    }
-
-    return handlerInput.responseBuilder
-    .addDirective({
-          type : 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-          document: aplDocument,
-          datasources: data
-      })
-    .speak(speechText)
-    //.reprompt(speechText)
-    .withShouldEndSession(true)
-    .getResponse()
-  },
+    canHandle(handlerInput){
+	console.log("DateIntentHandler");
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	const request = handlerInput.requestEnvelope.request;
+	
+	return attributes.state === 'DateIntentHandler' && request.type === 'IntentRequest';
+    },
+    
+    handle(handlerInput){
+	const request = handlerInput.requestEnvelope.request;
+	let value = request.intent.slots.date.value;
+	console.log(value);
+	
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	
+	var func = require('./sampleFunction.js');
+	console.log(func);
+	
+	let month_day = func.convDate(new Date(value),'MM月DD日')
+	
+	const speechText = attributes.year +'年' +  month_day + 'ですか。教えていただきありがとうございます';
+	
+	var aplDocument = require('./sampleFunction.js').doc;
+	const data =
+	      {
+		  myData: {
+		      title: speechText
+		  }
+	      }
+	
+	return handlerInput.responseBuilder
+	    .addDirective({
+		type : 'Alexa.Presentation.APL.RenderDocument',
+		version: '1.0',
+		document: aplDocument,
+		datasources: data
+	    })
+	    .speak(speechText)
+	//.reprompt(speechText)
+	    .withShouldEndSession(true)
+	    .getResponse()
+    },
 };
 
 
 
 const PlaceIntentHandler = {
-  canHandle(handlerInput){
-    console.log("PlaceIntentHandler");
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const request = handlerInput.requestEnvelope.request;
+    canHandle(handlerInput){
+	console.log("PlaceIntentHandler");
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	const request = handlerInput.requestEnvelope.request;
+	
+	return attributes.state === 'PlaceIntentHandler' && request.type === 'IntentRequest';
+    },
+    
+    async handle(handlerInput){
+	const request = handlerInput.requestEnvelope.request;
+	let place = request.intent.slots.place.value;
+	
+	let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes();
+	
+	
+	var dateTime = new Date()
+	
+	let reply_json = {
+	    "reply":place,
+	    "time": JSON.stringify(dateTime)
+	}
+	
+	console.log(reply_json);
+	console.log(JSON.stringify(reply_json));
+	
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	
+	persistentAttributes['myself'][attributes.selected_num]['response'].push(reply_json);
 
-    return attributes.state === 'PlaceIntentHandler' && request.type === 'IntentRequest';
-  },
+	persistentAttributes['count'] = attributes.count;
 
-  handle(handlerInput){
-    const request = handlerInput.requestEnvelope.request;
-    let place = request.intent.slots.place.value;
-
-    const speechText = place + 'ですか。教えていただきありがとうございます。';
-
-    var aplDocument = require('./sampleFunction.js').doc;
-    const data =
-    {
-        myData: {
-            title: speechText
-        }
-    }
-
-
-    return handlerInput.responseBuilder
-    .addDirective({
-          type : 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-          document: aplDocument,
-          datasources: data
-      })
-    .speak(speechText)
-    //.reprompt(speechText)
-    .withShouldEndSession(true)
-    .getResponse();
-  },
+	
+	console.log("from index_json : " + persistentAttributes);
+	handlerInput.attributesManager.setPersistentAttributes(persistentAttributes);
+	
+	await handlerInput.attributesManager.savePersistentAttributes();
+	
+	
+	
+	const speechText = place + 'ですか。教えていただきありがとうございます。';
+	
+	var aplDocument = require('./sampleFunction.js').doc;
+	const data =
+	      {
+		  myData: {
+		      title: speechText
+		  }
+	      }
+	
+	
+	return handlerInput.responseBuilder
+	    .addDirective({
+		type : 'Alexa.Presentation.APL.RenderDocument',
+		version: '1.0',
+		document: aplDocument,
+		datasources: data
+	    })
+	    .speak(speechText)
+	//.reprompt(speechText)
+	    .withShouldEndSession(true)
+	    .getResponse();
+    },
 };
 
 
