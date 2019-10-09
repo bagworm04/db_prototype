@@ -13,38 +13,47 @@ const DynamoDBAdapter = new Adapter.DynamoDbPersistenceAdapter(config);
 const reply = {
     "rep":[
 	{
-	    "first":"好きな食べ物",
-	    "second" : "なん",
-	    "state":null
+            "first": "好きな食べ物",
+            "response": [
+
+            ],
+            "second": "なん",
+            "state": -1
 	},
 	{
-	    "first": "好きな歌手",
-	    "second":"だれ",
-	    "state":null
+            "first": "好きな歌手",
+            "response": [
+
+            ],
+            "second": "だれ",
+            "state": -1
 	},
 	{
-	    "first":"好きな曲",
-	    "second":"なん",
-	    "state":null
+            "first": "好きな曲",
+            "response": [
+
+            ],
+            "second": "なん",
+            "state": -1
 	},
 	{
-	    "first":"生まれ",
-	    "second":"西暦何年",
-	    "state":0
+            "first": "生まれ",
+            "response": [
+
+            ],
+            "second": "西暦何年",
+            "state": 0
 	},
 	{
-	    "first":"生まれ",
-	    "second":"どこ",
-	    "state":1
-	},
-	{
-	    "first":"兄弟",
-	    "second":"いるん",
-	    "state":2
-	}	
+            "first": "生まれ",
+            "response": [
+
+            ],
+            "second": "どこ",
+            "state": 1
+	}
     ]
 }
-
 
 const LaunchRequestHandler = {
   canHandle(handlerInput) {
@@ -52,14 +61,13 @@ const LaunchRequestHandler = {
   },
     handle(handlerInput) {
 
-	var rand_num = require('./sampleFunction.js').randInt(5);
+	var rand_num = require('./sampleFunction.js').randInt(4);
 	
 	console.log("from index_js : " + reply['rep'][rand_num]['first'] + ' は '+ reply['rep'][rand_num]['second']  + "  ですか");
 
 	
 	var state_num = reply['rep'][rand_num]['state']
 
-	
 	
 	const speechText = 'データベーススキルです。こんにちは大竹さん。'+ reply['rep'][rand_num]['first'] +'は' + reply['rep'][rand_num]['second'] +'ですか';
 	
