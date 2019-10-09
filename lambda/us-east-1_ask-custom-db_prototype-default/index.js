@@ -10,13 +10,197 @@ const config = {tableName: 'db_prototype', // <= DynamoDBのテーブル名
 createTable: true}; // <= テーブルを自動生成する場合true (ただし権限が必要)
 const DynamoDBAdapter = new Adapter.DynamoDbPersistenceAdapter(config);
 
+const reply = {
+    "rep":[
+	{
+	    "first":"好きな食べ物",
+	    "second" : "なん"
+	},
+	{
+	    "first": "好きな歌手",
+	    "second":"だれ"
+	},
+	{
+	    "first":"好きな曲",
+	    "second":"なん"
+	},
+	
+    ]
+}
+
 
 const LaunchRequestHandler = {
   canHandle(handlerInput) {
     return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
   },
-  handle(handlerInput) {
-    const speechText = 'データベーススキルです。こんにちは大竹さん。データベースで記録してといってください。';
+    handle(handlerInput) {
+
+	var rand_num = require('./sampleFunction.js').randInt(3);
+	
+	console.log("from index_js : " + reply['rep'][rand_num].first + ' は '+ reply['rep'][rand_num]['second']  + "  ですか");
+
+	const speechText = 'データベーススキルです。こんにちは大竹さん。'+ reply['rep'][rand_num].first +'は' + reply['rep'][rand_num]['second'] +'ですか';
+
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	attributes.state = 'AnythingIntentHandler';
+	handlerInput.attributesManager.setSessionAttributes(attributes);
+										   
+											       
+
+	var aplDocument = require('./sampleFunction.js').doc;
+	const data =
+	      {
+		  myData: {
+		      title: speechText
+		  }
+	      }
+	
+	return handlerInput.responseBuilder
+	    .addDirective({
+		type : 'Alexa.Presentation.APL.RenderDocument',
+		version: '1.0',
+		document: aplDocument,
+		datasources: data
+	    })
+	    .speak(speechText)
+	    .reprompt(speechText)
+	    .getResponse();
+    }
+};
+
+
+const AnythingIntentHandler = {
+  canHandle(handlerInput){
+    console.log("from index :  AnythingIntent");
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const request = handlerInput.requestEnvelope.request;
+
+    return attributes.state === 'AnythingIntentHandler' && request.type === 'IntentRequest';
+  },
+  handle(handlerInput){
+    //let value = handlerInput.requestEnvelope.request.intent.slots.item.value;
+
+      var func = require('./sampleFunction.js');
+      var aplDocument = require('./sampleFunction.js').doc;
+      
+      
+    /* 
+      var num = func.randInt(1);
+      if(num == 0){
+	  console.log("int:0");
+	  var speechText = '生まれは西暦何年ですか';
+	  
+	  const attributes = handlerInput.attributesManager.getSessionAttributes();
+	  attributes.state = 'BirthYearIntentHandler';
+	  handlerInput.attributesManager.setSessionAttributes(attributes);
+	  
+      }else{
+	  console.log("int:else");
+	  var speechText = '生まれはどこですか';
+	  
+	  const attributes = handlerInput.attributesManager.getSessionAttributes();
+	  attributes.state = 'PlaceIntentHandler';
+	  handlerInput.attributesManager.setSessionAttributes(attributes);
+	  
+      }
+      
+    */
+
+      const request = handlerInput.requestEnvelope.request;
+      let reply = request.intent.slots.utterance.value;
+      console.log("from index : " + reply);
+      const speechText = reply + 'ですか。教えていただきありがとうございます。';
+      
+      
+      
+      const data =
+	    {
+		myData: {
+		    title: speechText
+		}
+	    }
+
+      return handlerInput.responseBuilder
+	  .addDirective({
+              type : 'Alexa.Presentation.APL.RenderDocument',
+              version: '1.0',
+              document: aplDocument,
+              datasources: data
+	  })
+	  .speak(speechText)
+      //.reprompt(speechText)
+	  .withShouldEndSession(true)
+	  .getResponse();
+  },
+};
+
+
+/*
+const BirthYearIntentHandler = {
+  canHandle(handlerInput){
+    console.log("BirthYearIntentHandler");
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const request = handlerInput.requestEnvelope.request;
+
+    return attributes.state === 'BirthYearIntentHandler' && request.type === 'IntentRequest';
+  },
+
+  handle(handlerInput){
+    const request = handlerInput.requestEnvelope.request;
+    let birth_year = request.intent.slots.year.value;
+    console.log(birth_year);
+    const speechText = birth_year + '年ですね。何月何日ですか';
+
+
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    attributes.year = birth_year;
+    attributes.state = 'DateIntentHandler';
+    handlerInput.attributesManager.setSessionAttributes(attributes);
+
+    var aplDocument = require('./sampleFunction.js').doc;
+    const data =
+    {
+        myData: {
+            title: speechText
+        }
+    }
+
+    return handlerInput.responseBuilder
+    .addDirective({
+          type : 'Alexa.Presentation.APL.RenderDocument',
+          version: '1.0',
+          document: aplDocument,
+          datasources: data
+      })
+    .speak(speechText)
+    .reprompt(speechText)
+    .getResponse();
+  },
+};
+
+
+const DateIntentHandler = {
+  canHandle(handlerInput){
+    console.log("DateIntentHandler");
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const request = handlerInput.requestEnvelope.request;
+
+    return attributes.state === 'DateIntentHandler' && request.type === 'IntentRequest';
+  },
+
+  handle(handlerInput){
+    const request = handlerInput.requestEnvelope.request;
+    let value = request.intent.slots.date.value;
+    console.log(value);
+
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+
+    var func = require('./sampleFunction.js');
+    console.log(func);
+
+    let month_day = func.convDate(new Date(value),'MM月DD日')
+
+    const speechText = attributes.year +'年' +  month_day + 'ですか。教えていただきありがとうございます';
 
     var aplDocument = require('./sampleFunction.js').doc;
     const data =
@@ -35,57 +219,8 @@ const LaunchRequestHandler = {
       })
     .speak(speechText)
     //.reprompt(speechText)
-    .getResponse();
-  }
-};
-const ResponseIntentHandler = {
-  canHandle(handlerInput){
-    console.log("ResponseIntent");
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const request = handlerInput.requestEnvelope.request;
-
-    return Alexa.getIntentName(handlerInput.requestEnvelope) === 'ResponseIntent' && request.type === 'IntentRequest';
-  },
-  handle(handlerInput){
-    //let value = handlerInput.requestEnvelope.request.intent.slots.item.value;
-
-    var func = require('./sampleFunction.js');
-    var aplDocument = require('./sampleFunction.js').doc;
-
-    var num = func.randInt(1);
-    if(num == 0){
-      console.log("int:0");
-      var speechText = '生まれは西暦何年ですか';
-
-      const attributes = handlerInput.attributesManager.getSessionAttributes();
-      attributes.state = 'BirthYearIntentHandler';
-      handlerInput.attributesManager.setSessionAttributes(attributes);
-
-    }else{
-      console.log("int:else");
-      var speechText = '生まれはどこですか';
-
-      const attributes = handlerInput.attributesManager.getSessionAttributes();
-      attributes.state = 'PlaceIntentHandler';
-      handlerInput.attributesManager.setSessionAttributes(attributes);
-
-    }
-    const data =
-    {
-        myData: {
-            title: speechText
-        }
-    }
-    return handlerInput.responseBuilder
-    .addDirective({
-          type : 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-          document: aplDocument,
-          datasources: data
-      })
-    .speak(speechText)
-    .reprompt(speechText)
-    .getResponse();
+    .withShouldEndSession(true)
+    .getResponse()
   },
 };
 
@@ -217,7 +352,7 @@ const PlaceIntentHandler = {
   },
 };
 
-
+*/
 
 
 const HelpIntentHandler = {
@@ -299,15 +434,20 @@ const ErrorHandler = {
 // defined are included below. The order matters - they're processed top to bottom.
 exports.handler = Alexa.SkillBuilders.custom()
 .addRequestHandlers(
-  LaunchRequestHandler,
-  DateIntentHandler,
-  ResponseIntentHandler,
-  HelpIntentHandler,
-  BirthYearIntentHandler,
-  PlaceIntentHandler,
-  CancelAndStopIntentHandler,
-  SessionEndedRequestHandler,
-  IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
+    LaunchRequestHandler,
+    AnythingIntentHandler,
+    
+    /*
+    DateIntentHandler,
+    ResponseIntentHandler,
+    BirthYearIntentHandler,
+    PlaceIntentHandler,
+    */
+
+    HelpIntentHandler,
+    CancelAndStopIntentHandler,
+    SessionEndedRequestHandler,
+    IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
 )
 
 .withPersistenceAdapter(DynamoDBAdapter)
