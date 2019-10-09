@@ -10,85 +10,60 @@ const config = {tableName: 'db_prototype', // <= DynamoDBのテーブル名
 createTable: true}; // <= テーブルを自動生成する場合true (ただし権限が必要)
 const DynamoDBAdapter = new Adapter.DynamoDbPersistenceAdapter(config);
 
-const reply = {
-    "rep":[
-	{
-            "first": "好きな食べ物",
-            "response": [
-
-            ],
-            "second": "なん",
-            "state": -1
-	},
-	{
-            "first": "好きな歌手",
-            "response": [
-
-            ],
-            "second": "だれ",
-            "state": -1
-	},
-	{
-            "first": "好きな曲",
-            "response": [
-
-            ],
-            "second": "なん",
-            "state": -1
-	},
-	{
-            "first": "生まれ",
-            "response": [
-
-            ],
-            "second": "西暦何年",
-            "state": 0
-	},
-	{
-            "first": "生まれ",
-            "response": [
-
-            ],
-            "second": "どこ",
-            "state": 1
-	}
-    ]
-}
 
 const LaunchRequestHandler = {
-  canHandle(handlerInput) {
-    return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
-  },
-    handle(handlerInput) {
+    canHandle(handlerInput) {
+	return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
+    },
+    async handle(handlerInput) {
+	
+	let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes();
+	const lifestyle_attributes_json = persistentAttributes['lifestyle'];
+	let count = (persistentAttributes.count | 0);
+	
+	
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	
+	
+	var rand_num = require('./sampleFunction.js').randInt(3);
+	
+	console.log("from index_js : " + lifestyle_attributes_json);
+	console.log("from index_js : " + JSON.stringify(lifestyle_attributes_json));
 
-	var rand_num = require('./sampleFunction.js').randInt(4);
+	console.log("from index_js : " + lifestyle_attributes_json[rand_num].secondPhrase);
+	console.log("from index_js : " + JSON.stringify(lifestyle_attributes_json[rand_num]['secondPhrase']));
+	console.log("from index_js : " + lifestyle_attributes_json[rand_num].firstPhrase + ' は '+ lifestyle_attributes_json[rand_num].secondPhrase + "  ですか");
 	
-	console.log("from index_js : " + reply['rep'][rand_num]['first'] + ' は '+ reply['rep'][rand_num]['second']  + "  ですか");
+	
+	var state_num = lifestyle_attributes_json[rand_num]['state'];
+	
+	const speechText = 'データベーススキルです。こんにちは大竹さん。'+ lifestyle_attributes_json[rand_num]['firstPhrase'] +'は' + lifestyle_attributes_json[rand_num]['secondPhrase'] +'ですか';
+	
+	count += 1;
 
-	
-	var state_num = reply['rep'][rand_num]['state']
+	attributes.rand_num = rand_num;
 
+	attributes.counter = count;
 	
-	const speechText = 'データベーススキルです。こんにちは大竹さん。'+ reply['rep'][rand_num]['first'] +'は' + reply['rep'][rand_num]['second'] +'ですか';
-	
+	//DB向けのアトリビュート
+	//handlerInput.attributesManager.setPersistentAttributes({count:count});
+	//await handlerInput.attributesManager.savePersistentAttributes();
+
 	
 	if(state_num == 0){
 	    console.log("int:0");
 	    
-	    const attributes = handlerInput.attributesManager.getSessionAttributes();
 	    attributes.state = 'BirthYearIntentHandler';
 	    handlerInput.attributesManager.setSessionAttributes(attributes);
 	    
 	}else if(state_num == 1){
 	    console.log("int:1");
 
-	    const attributes = handlerInput.attributesManager.getSessionAttributes();
 	    attributes.state = 'PlaceIntentHandler';
 	    handlerInput.attributesManager.setSessionAttributes(attributes);
 	    
 	}else{
-	    
-	    const attributes = handlerInput.attributesManager.getSessionAttributes();
+
 	    attributes.state = 'AnythingIntentHandler';
 	    handlerInput.attributesManager.setSessionAttributes(attributes);
 	}
@@ -117,25 +92,55 @@ const LaunchRequestHandler = {
 
 
 const AnythingIntentHandler = {
-  canHandle(handlerInput){
-    console.log("from index :  AnythingIntent");
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const request = handlerInput.requestEnvelope.request;
+    canHandle(handlerInput){
+	console.log("from index :  AnythingIntent");
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	const request = handlerInput.requestEnvelope.request;
+	
+	return attributes.state === 'AnythingIntentHandler' && request.type === 'IntentRequest';
+    },
+    async  handle(handlerInput){
+	//let value = handlerInput.requestEnvelope.request.intent.slots.item.value;
+	
+	var func = require('./sampleFunction.js');
+	var aplDocument = require('./sampleFunction.js').doc;
+	
+        
+	const request = handlerInput.requestEnvelope.request;
+	let reply = request.intent.slots.utterance.value;
+	console.log("from index : " + reply);
+	
+	const speechText = reply + 'ですか。教えていただきありがとうございます。';
+	
+	
+	let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes();
+			
+	let attributes = handlerInput.attributesManager.getSessionAttributes();
 
-    return attributes.state === 'AnythingIntentHandler' && request.type === 'IntentRequest';
-  },
-  handle(handlerInput){
-    //let value = handlerInput.requestEnvelope.request.intent.slots.item.value;
+	var dateTime = new Date()
+	
+	let reply_json = {
+	    "reply":reply,
+	    "time": JSON.stringify(dateTime)
+	}
 
-      var func = require('./sampleFunction.js');
-      var aplDocument = require('./sampleFunction.js').doc;
-      
-      const request = handlerInput.requestEnvelope.request;
-      let reply = request.intent.slots.utterance.value;
-      console.log("from index : " + reply);
-      const speechText = reply + 'ですか。教えていただきありがとうございます。';
-       
-      const data =
+	console.log(reply_json);
+	console.log(JSON.stringify(reply_json));
+	
+	//handlerInput.attributesManager.setPersistenAttributes({lifestyle[attributes.rand_num]['response'][0]:reply_json});
+
+	
+	persistentAttributes['lifestyle'][attributes.rand_num]['response'].push(reply_json);
+
+	const new_json = persistentAttributes;
+	
+	console.log("from index_json : " + new_json);
+	handlerInput.attributesManager.setPersistentAttributes(new_json);
+	
+	await handlerInput.attributesManager.savePersistentAttributes();
+	
+	
+	const data =
 	    {
 		myData: {
 		    title: speechText
