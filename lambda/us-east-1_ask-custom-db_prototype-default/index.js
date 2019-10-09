@@ -14,17 +14,34 @@ const reply = {
     "rep":[
 	{
 	    "first":"好きな食べ物",
-	    "second" : "なん"
+	    "second" : "なん",
+	    "state":null
 	},
 	{
 	    "first": "好きな歌手",
-	    "second":"だれ"
+	    "second":"だれ",
+	    "state":null
 	},
 	{
 	    "first":"好きな曲",
-	    "second":"なん"
+	    "second":"なん",
+	    "state":null
 	},
-	
+	{
+	    "first":"生まれ",
+	    "second":"西暦何年",
+	    "state":0
+	},
+	{
+	    "first":"生まれ",
+	    "second":"どこ",
+	    "state":1
+	},
+	{
+	    "first":"兄弟",
+	    "second":"いるん",
+	    "state":2
+	}	
     ]
 }
 
@@ -35,17 +52,39 @@ const LaunchRequestHandler = {
   },
     handle(handlerInput) {
 
-	var rand_num = require('./sampleFunction.js').randInt(3);
+	var rand_num = require('./sampleFunction.js').randInt(5);
 	
-	console.log("from index_js : " + reply['rep'][rand_num].first + ' は '+ reply['rep'][rand_num]['second']  + "  ですか");
+	console.log("from index_js : " + reply['rep'][rand_num]['first'] + ' は '+ reply['rep'][rand_num]['second']  + "  ですか");
 
-	const speechText = 'データベーススキルです。こんにちは大竹さん。'+ reply['rep'][rand_num].first +'は' + reply['rep'][rand_num]['second'] +'ですか';
+	
+	var state_num = reply['rep'][rand_num]['state']
 
-	const attributes = handlerInput.attributesManager.getSessionAttributes();
-	attributes.state = 'AnythingIntentHandler';
-	handlerInput.attributesManager.setSessionAttributes(attributes);
-										   
-											       
+	
+	
+	const speechText = 'データベーススキルです。こんにちは大竹さん。'+ reply['rep'][rand_num]['first'] +'は' + reply['rep'][rand_num]['second'] +'ですか';
+	
+	
+	if(state_num == 0){
+	    console.log("int:0");
+	    
+	    const attributes = handlerInput.attributesManager.getSessionAttributes();
+	    attributes.state = 'BirthYearIntentHandler';
+	    handlerInput.attributesManager.setSessionAttributes(attributes);
+	    
+	}else if(state_num == 1){
+	    console.log("int:1");
+
+	    const attributes = handlerInput.attributesManager.getSessionAttributes();
+	    attributes.state = 'PlaceIntentHandler';
+	    handlerInput.attributesManager.setSessionAttributes(attributes);
+	    
+	}else{
+	    
+	    const attributes = handlerInput.attributesManager.getSessionAttributes();
+	    attributes.state = 'AnythingIntentHandler';
+	    handlerInput.attributesManager.setSessionAttributes(attributes);
+	}
+      	
 
 	var aplDocument = require('./sampleFunction.js').doc;
 	const data =
@@ -83,36 +122,11 @@ const AnythingIntentHandler = {
       var func = require('./sampleFunction.js');
       var aplDocument = require('./sampleFunction.js').doc;
       
-      
-    /* 
-      var num = func.randInt(1);
-      if(num == 0){
-	  console.log("int:0");
-	  var speechText = '生まれは西暦何年ですか';
-	  
-	  const attributes = handlerInput.attributesManager.getSessionAttributes();
-	  attributes.state = 'BirthYearIntentHandler';
-	  handlerInput.attributesManager.setSessionAttributes(attributes);
-	  
-      }else{
-	  console.log("int:else");
-	  var speechText = '生まれはどこですか';
-	  
-	  const attributes = handlerInput.attributesManager.getSessionAttributes();
-	  attributes.state = 'PlaceIntentHandler';
-	  handlerInput.attributesManager.setSessionAttributes(attributes);
-	  
-      }
-      
-    */
-
       const request = handlerInput.requestEnvelope.request;
       let reply = request.intent.slots.utterance.value;
       console.log("from index : " + reply);
       const speechText = reply + 'ですか。教えていただきありがとうございます。';
-      
-      
-      
+       
       const data =
 	    {
 		myData: {
@@ -134,8 +148,6 @@ const AnythingIntentHandler = {
   },
 };
 
-
-/*
 const BirthYearIntentHandler = {
   canHandle(handlerInput){
     console.log("BirthYearIntentHandler");
@@ -225,94 +237,6 @@ const DateIntentHandler = {
 };
 
 
-
-const BirthYearIntentHandler = {
-  canHandle(handlerInput){
-    console.log("BirthYearIntentHandler");
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const request = handlerInput.requestEnvelope.request;
-
-    return attributes.state === 'BirthYearIntentHandler' && request.type === 'IntentRequest';
-  },
-
-  handle(handlerInput){
-    const request = handlerInput.requestEnvelope.request;
-    let birth_year = request.intent.slots.year.value;
-    console.log(birth_year);
-    const speechText = birth_year + '年ですね。何月何日ですか';
-
-
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    attributes.year = birth_year;
-    attributes.state = 'DateIntentHandler';
-    handlerInput.attributesManager.setSessionAttributes(attributes);
-
-    var aplDocument = require('./sampleFunction.js').doc;
-    const data =
-    {
-        myData: {
-            title: speechText
-        }
-    }
-
-    return handlerInput.responseBuilder
-    .addDirective({
-          type : 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-          document: aplDocument,
-          datasources: data
-      })
-    .speak(speechText)
-    .reprompt(speechText)
-    .getResponse();
-  },
-};
-
-
-const DateIntentHandler = {
-  canHandle(handlerInput){
-    console.log("DateIntentHandler");
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    const request = handlerInput.requestEnvelope.request;
-
-    return attributes.state === 'DateIntentHandler' && request.type === 'IntentRequest';
-  },
-
-  handle(handlerInput){
-    const request = handlerInput.requestEnvelope.request;
-    let value = request.intent.slots.date.value;
-    console.log(value);
-
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-
-    var func = require('./sampleFunction.js');
-    console.log(func);
-
-    let month_day = func.convDate(new Date(value),'MM月DD日')
-
-    const speechText = attributes.year +'年' +  month_day + 'ですか。教えていただきありがとうございます';
-
-    var aplDocument = require('./sampleFunction.js').doc;
-    const data =
-    {
-        myData: {
-            title: speechText
-        }
-    }
-
-    return handlerInput.responseBuilder
-    .addDirective({
-          type : 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-          document: aplDocument,
-          datasources: data
-      })
-    .speak(speechText)
-    //.reprompt(speechText)
-    .withShouldEndSession(true)
-    .getResponse()
-  },
-};
 
 const PlaceIntentHandler = {
   canHandle(handlerInput){
@@ -351,8 +275,6 @@ const PlaceIntentHandler = {
     .getResponse();
   },
 };
-
-*/
 
 
 const HelpIntentHandler = {
@@ -437,12 +359,12 @@ exports.handler = Alexa.SkillBuilders.custom()
     LaunchRequestHandler,
     AnythingIntentHandler,
     
-    /*
+    
     DateIntentHandler,
-    ResponseIntentHandler,
+    //ResponseIntentHandler,
     BirthYearIntentHandler,
     PlaceIntentHandler,
-    */
+    
 
     HelpIntentHandler,
     CancelAndStopIntentHandler,
