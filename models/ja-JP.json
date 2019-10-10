@@ -89,6 +89,20 @@
                         "{sibiling}"
                     ]
                 },
+		{
+                    "name": "BloodTypeIntent",
+                    "slots": [
+                        {
+                            "name": "bloodtype",
+                            "type": "bloodtype"
+                        }
+                    ],
+                    "samples": [
+                        "{bloodtype}",
+                        "{bloodtype} だよ",
+                        "{bloodtype} です"
+                    ]
+                },
                 {
                     "name": "AMAZON.NavigateHomeIntent",
                     "samples": []
@@ -146,6 +160,51 @@
                         {
                             "name": {
                                 "value": "弟"
+                            }
+                        }
+                    ]
+                },
+		{
+                    "name": "bloodtype",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "AB"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "O"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "B"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "A"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "O型"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "AB型"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "B型"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "A型"
                             }
                         }
                     ]

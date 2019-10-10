@@ -97,6 +97,18 @@ const LaunchRequestHandler = {
 	    attributes.state = 'SibilingIntentHandler';
 	    handlerInput.attributesManager.setSessionAttributes(attributes);
 
+	}else if(state_num == 3){
+	    console.log("int:3");
+
+	    attributes.state = 'AnythingIntentHandler';
+	    handlerInput.attributesManager.setSessionAttributes(attributes);
+
+	}else if(state_num == 4){
+	    console.log("int:4");
+
+	    attributes.state = 'BloodTypeIntentHandler';
+	    handlerInput.attributesManager.setSessionAttributes(attributes);
+
 	}else{
 
 	    attributes.state = 'AnythingIntentHandler';
@@ -441,6 +453,70 @@ const SibilingIntentHandler = {
     },
 };
 
+const BloodTypeIntentHandler = {
+    canHandle(handlerInput) {
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	
+	return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+	    && attributes.state === 'BloodTypeIntentHandler';
+    },
+    async handle(handlerInput){
+	const request = handlerInput.requestEnvelope.request;
+	let bloodtype = request.intent.slots.bloodtype.value;
+	
+	let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes();
+	
+	
+	var dateTime = new Date()
+	
+	let reply_json = {
+	    "reply":bloodtype,
+	    "time": JSON.stringify(dateTime)
+	}
+	
+	console.log(reply_json);
+	console.log(JSON.stringify(reply_json));
+	
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	
+	persistentAttributes['myself'][attributes.selected_num]['response'].push(reply_json);
+
+	persistentAttributes['count'] = attributes.count;
+
+	
+	console.log("from index_json : " + persistentAttributes);
+	handlerInput.attributesManager.setPersistentAttributes(persistentAttributes);
+	
+	await handlerInput.attributesManager.savePersistentAttributes();
+	
+	
+	
+	const speechText = bloodtype + 'ですか。教えていただきありがとうございます。';
+	
+	var aplDocument = require('./sampleFunction.js').doc;
+	const data =
+	      {
+		  myData: {
+		      title: speechText
+		  }
+	      }
+	
+	
+	return handlerInput.responseBuilder
+	    .addDirective({
+		type : 'Alexa.Presentation.APL.RenderDocument',
+		version: '1.0',
+		document: aplDocument,
+		datasources: data
+	    })
+	    .speak(speechText)
+	//.reprompt(speechText)
+	    .withShouldEndSession(true)
+	    .getResponse();
+    },
+};
+
+
 
 const HelpIntentHandler = {
   canHandle(handlerInput) {
@@ -529,7 +605,9 @@ exports.handler = Alexa.SkillBuilders.custom()
     BirthYearIntentHandler,
     PlaceIntentHandler,
     SibilingIntentHandler,
+    BloodTypeIntentHandler,
 
+    
     HelpIntentHandler,
     CancelAndStopIntentHandler,
     SessionEndedRequestHandler,
