@@ -27,9 +27,16 @@ const LaunchRequestHandler = {
 	
 	const func = require('./sampleFunction.js');
 
+
+	//1はlifestyle
+	//2はfamily
+	//3はassets
+	
+	var rand_family_life_assets_select = func.randInt(4);
+	
 	var item = func.hasNullInMyself(persistentAttributes);
 	
-	console.log("from index_js : "+ item);
+	console.log("from index_js rand_family_life_assets_select : "+ rand_family_life_assets_select);
 
 
 	
@@ -38,18 +45,27 @@ const LaunchRequestHandler = {
 
 	    var selected_num = item;
 	    
+	}else if(rand_family_life_assets_select == 0){
+	    
+	    attributes_json = persistentAttributes['family'];
+	    
+	    var selected_num = require('./sampleFunction.js').randInt(attributes_json.length-1);
+	    console.log("from index_js selected_num:" + selected_num);
+	    
 	}else{
+
 	    attributes_json = persistentAttributes['lifestyle'];
    
 	    var selected_num = require('./sampleFunction.js').randInt(attributes_json.length-1);
-	    console.log("from index_js :" + selected_num);
+	    console.log("from index_js selected_num:" + selected_num);
+
 	}
 	    	
 
 	let count = (persistentAttributes.count | 0);
 			
 	
-	console.log("from index_js : " + attributes_json[selected_num].firstPhrase + ' は '+ attributes_json[selected_num].secondPhrase + "  ですか");
+	console.log("from index_js : " + attributes_json[selected_num]['firstPhrase'] + ' は '+ attributes_json[selected_num]['secondPhrase'] + "  ですか");
 	
 	
 	var state_num = attributes_json[selected_num]['state'];
@@ -62,10 +78,6 @@ const LaunchRequestHandler = {
 
 	attributes.count = count;
 	
-	//DB向けのアトリビュート
-	//handlerInput.attributesManager.setPersistentAttributes({count:count});
-	//await handlerInput.attributesManager.savePersistentAttributes();
-
 	
 	if(state_num == 0){
 	    console.log("int:0");
@@ -79,6 +91,12 @@ const LaunchRequestHandler = {
 	    attributes.state = 'PlaceIntentHandler';
 	    handlerInput.attributesManager.setSessionAttributes(attributes);
 	    
+	}else if(state_num == 2){
+	    console.log("int:2");
+
+	    attributes.state = 'SibilingIntentHandler';
+	    handlerInput.attributesManager.setSessionAttributes(attributes);
+
 	}else{
 
 	    attributes.state = 'AnythingIntentHandler';
@@ -360,6 +378,69 @@ const PlaceIntentHandler = {
     },
 };
 
+const SibilingIntentHandler = {
+    canHandle(handlerInput) {
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	
+	return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+	    && attributes.state === 'SibilingIntentHandler';
+    },
+    async handle(handlerInput){
+	const request = handlerInput.requestEnvelope.request;
+	let sibiling = request.intent.slots.sibiling.value;
+	
+	let persistentAttributes = await handlerInput.attributesManager.getPersistentAttributes();
+	
+	
+	var dateTime = new Date()
+	
+	let reply_json = {
+	    "reply":sibiling,
+	    "time": JSON.stringify(dateTime)
+	}
+	
+	console.log(reply_json);
+	console.log(JSON.stringify(reply_json));
+	
+	const attributes = handlerInput.attributesManager.getSessionAttributes();
+	
+	persistentAttributes['family'][attributes.selected_num]['response'].push(reply_json);
+
+	persistentAttributes['count'] = attributes.count;
+
+	
+	console.log("from index_json : " + persistentAttributes);
+	handlerInput.attributesManager.setPersistentAttributes(persistentAttributes);
+	
+	await handlerInput.attributesManager.savePersistentAttributes();
+	
+	
+	
+	const speechText = sibiling + 'ですか。教えていただきありがとうございます。';
+	
+	var aplDocument = require('./sampleFunction.js').doc;
+	const data =
+	      {
+		  myData: {
+		      title: speechText
+		  }
+	      }
+	
+	
+	return handlerInput.responseBuilder
+	    .addDirective({
+		type : 'Alexa.Presentation.APL.RenderDocument',
+		version: '1.0',
+		document: aplDocument,
+		datasources: data
+	    })
+	    .speak(speechText)
+	//.reprompt(speechText)
+	    .withShouldEndSession(true)
+	    .getResponse();
+    },
+};
+
 
 const HelpIntentHandler = {
   canHandle(handlerInput) {
@@ -445,10 +526,9 @@ exports.handler = Alexa.SkillBuilders.custom()
     
     
     DateIntentHandler,
-    //ResponseIntentHandler,
     BirthYearIntentHandler,
     PlaceIntentHandler,
-    
+    SibilingIntentHandler,
 
     HelpIntentHandler,
     CancelAndStopIntentHandler,

@@ -72,6 +72,22 @@
                         "{place} 村",
                         "{place} 区"
                     ]
+                },{
+                    "name": "SibilingIntent",
+                    "slots": [
+                        {
+                            "name": "sibiling",
+                            "type": "Sibiling"
+                        }
+                    ],
+                    "samples": [
+                        "{sibiling} います",
+                        "{sibiling} いる",
+                        "{sibiling} いるよ",
+                        "{sibiling} がいます",
+                        "{sibiling} です",
+                        "{sibiling}"
+                    ]
                 },
                 {
                     "name": "AMAZON.NavigateHomeIntent",
@@ -85,6 +101,51 @@
                         {
                             "name": {
                                 "value": "ほげほげ"
+                            }
+                        }
+                    ]
+                },
+		{
+                    "name": "Sibiling",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "お姉さん"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "お兄さん"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "お兄ちゃん"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "お姉ちゃん"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "姉"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "兄"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "妹"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "弟"
                             }
                         }
                     ]

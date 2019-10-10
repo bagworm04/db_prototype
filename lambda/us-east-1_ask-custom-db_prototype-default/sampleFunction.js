@@ -7,7 +7,7 @@ module.exports.convDate = function(date, format){
 }
 
 module.exports.randInt = function(max){
-  return Math.floor(Math.random() * (max + 1));
+  return Math.floor(Math.random() * (max));
 }
 
 module.exports.hasNullInMyself = function(json){
