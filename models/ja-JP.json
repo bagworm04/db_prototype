@@ -25,90 +25,74 @@
                         {
                             "name": "utterance",
                             "type": "any"
-                        }
+                        },
+                        {
+                            "name": "food",
+                            "type": "AMAZON.Food"
+                        },
+			{
+			    "name": "musician",
+			    "type": "AMAZON.Musician"
+			}
                     ],
 		    "samples": [
+			"{musician} です",
+			"{musician}",
+			"{food} です",
+			"{food}",
+			"あ",
+			"a",
                         "ほげほげ",
                         "{utterance}"
                     ]
 		},
-                {
-                    "name": "BirthYearIntent",
+		{
+                    "name": "BasicIntent",
                     "slots": [
                         {
                             "name": "year",
                             "type": "AMAZON.FOUR_DIGIT_NUMBER"
-                        }
-                    ],
-                    "samples": [
-                        "{year} 年"
-                    ]
-                },
-                {
-                    "name": "DateIntent",
-                    "slots": [
+                        },
                         {
                             "name": "date",
                             "type": "AMAZON.DATE"
-                        }
-                    ],
-                    "samples": [
-                        "{date} 月 {date} 日",
-                        "{date} 月"
-                    ]
-                },
-                {
-                    "name": "PlaceIntent",
-                    "slots": [
+                        },
                         {
                             "name": "place",
                             "type": "AMAZON.City"
-                        }
-                    ],
-                    "samples": [
-                        "{place} 県",
-                        "{place} 市",
-                        "{place} 町",
-                        "{place} 村",
-                        "{place} 区"
-                    ]
-                },{
-                    "name": "SibilingIntent",
-                    "slots": [
+                        },
                         {
                             "name": "sibiling",
                             "type": "Sibiling"
-                        }
-                    ],
-                    "samples": [
-                        "{sibiling} います",
-                        "{sibiling} いる",
-                        "{sibiling} いるよ",
-                        "{sibiling} がいます",
-                        "{sibiling} です",
-                        "{sibiling}"
-                    ]
-                },
-		{
-                    "name": "BloodTypeIntent",
-                    "slots": [
+                        },
                         {
                             "name": "bloodtype",
                             "type": "bloodtype"
                         }
                     ],
                     "samples": [
+                        "{place} 区",
+                        "{place} 村",
+                        "{place} 町",
+                        "{place} 市",
+                        "{place} 県",
+                        "{date} 月",
+                        "{date} 月 {date} 日",
+                        "{year} 年です",
+                        "{year} 年",
+                        "{sibiling} います",
+                        "{sibiling} いる",
+                        "{sibiling} いるよ",
+                        "{sibiling} がいます",
+                        "{sibiling} です",
+                        "{sibiling}",
                         "{bloodtype}",
                         "{bloodtype} だよ",
                         "{bloodtype} です"
                     ]
-                },
-                {
-                    "name": "AMAZON.NavigateHomeIntent",
-                    "samples": []
-                }
+                }                
             ],
-            "types": [
+	    "types": [
                 {
                     "name": "any",
                     "values": [
@@ -119,7 +103,7 @@
                         }
                     ]
                 },
-		{
+                {
                     "name": "Sibiling",
                     "values": [
                         {
@@ -164,7 +148,7 @@
                         }
                     ]
                 },
-		{
+                {
                     "name": "bloodtype",
                     "values": [
                         {
