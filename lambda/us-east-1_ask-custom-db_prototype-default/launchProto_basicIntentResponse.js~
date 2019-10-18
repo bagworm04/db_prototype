@@ -1,0 +1,8 @@
+module.exports.getResponse = function(persistentMemory, responseJson, sessionMemory){
+    for(key in responseJSON){
+	console.log(key);
+	if(key === persistentMemory[sessionMemory.genre][sessionMemory.item]['slotName']){
+	    return responseJson[key]['value'];
+	}
+    }
+};

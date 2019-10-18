@@ -19,72 +19,176 @@
                         "ストップして"
                     ]
                 },
-                {
-                    "name": "BirthYearIntent",
+		{
+		    "name": "AnythingIntent",
+		    "slots": [
+                        {
+                            "name": "utterance",
+                            "type": "any"
+                        },
+                        {
+                            "name": "food",
+                            "type": "AMAZON.Food"
+                        },
+			{
+			    "name": "musician",
+			    "type": "AMAZON.Musician"
+			}
+                    ],
+		    "samples": [
+			"{musician} です",
+			"{musician}",
+			"{food} です",
+			"{food}",
+			"あ",
+			"a",
+                        "ほげほげ",
+                        "{utterance}"
+                    ]
+		},
+		{
+                    "name": "BasicIntent",
                     "slots": [
                         {
                             "name": "year",
                             "type": "AMAZON.FOUR_DIGIT_NUMBER"
-                        }
-                    ],
-                    "samples": [
-                        "{year} 年"
-                    ]
-                },
-                {
-                    "name": "DateIntent",
-                    "slots": [
+                        },
                         {
                             "name": "date",
                             "type": "AMAZON.DATE"
-                        }
-                    ],
-                    "samples": [
-                        "{date} 月 {date} 日",
-                        "{date} 月"
-                    ]
-                },
-                {
-                    "name": "ResponseIntent",
-                    "slots": [
-                        {
-                            "name": "utterance",
-                            "type": "any"
-                        }
-                    ],
-                    "samples": [
-                        "ほげほげ",
-                        "{utterance}"
-                    ]
-                },
-                {
-                    "name": "PlaceIntent",
-                    "slots": [
+                        },
                         {
                             "name": "place",
                             "type": "AMAZON.City"
+                        },
+                        {
+                            "name": "sibiling",
+                            "type": "Sibiling"
+                        },
+                        {
+                            "name": "bloodtype",
+                            "type": "bloodtype"
                         }
                     ],
                     "samples": [
-                        "{place} 県",
-                        "{place} 市",
-                        "{place} 町",
+                        "{place} 区",
                         "{place} 村",
-                        "{place} 区"
+                        "{place} 町",
+                        "{place} 市",
+                        "{place} 県",
+                        "{date} 月",
+                        "{date} 月 {date} 日",
+                        "{year} 年です",
+                        "{year} 年",
+                        "{sibiling} います",
+                        "{sibiling} いる",
+                        "{sibiling} いるよ",
+                        "{sibiling} がいます",
+                        "{sibiling} です",
+                        "{sibiling}",
+                        "{bloodtype}",
+                        "{bloodtype} だよ",
+                        "{bloodtype} です"
                     ]
-                },
-                {
-                    "name": "AMAZON.NavigateHomeIntent",
-                    "samples": []
                 }
             ],
-            "types": [
+	    "types": [
                 {
                     "name": "any",
                     "values": [
                         {
                             "name": {
                                 "value": "ほげほげ"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Sibiling",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "お姉さん"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "お兄さん"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "お兄ちゃん"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "お姉ちゃん"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "姉"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "兄"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "妹"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "弟"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "bloodtype",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "AB"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "O"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "B"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "A"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "O型"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "AB型"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "B型"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "A型"
                             }
                         }
                     ]
