@@ -29,7 +29,11 @@ const LaunchRequestHandler = {
 	    sessionMemory.intent  = functions.setIntent('AnythingIntent');
 	    sessionMemory.genre   = functions.setGenre(persistentMemory);
 	    sessionMemory.item    = functions.getItemNum(persistentMemory, sessionMemory.genre);
-	    //前回内容によって分岐させる
+
+	    if(persistentMemory[sessionMemory.genre][sessionMemory.item]['response'].length != 0){ //前回記録があるとき
+		speechText_first  = functions.getLastRecord(persistentMemory, sessionMemory); 
+	    }
+	    
 	    speechText            =  speechText_first + functions.getQuestion(persistentMemory, sessionMemory.genre, sessionMemory.item);
 	    console.log(speechText);
 	}

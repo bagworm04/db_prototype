@@ -90,6 +90,14 @@
                         "{bloodtype} だよ",
                         "{bloodtype} です"
                     ]
+                },
+		{
+                    "name": "AMAZON.YesIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "samples": []
                 }
             ],
 	    "types": [

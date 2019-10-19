@@ -137,3 +137,12 @@ module.exports.getResponse = function(persistentMemory, responseJSON, sessionMem
     }
     return null;
 }
+
+module.exports.getLastRecord = function(persistentMemory, sessionMemory){
+    var record = persistentMemory[sessionMemory.genre][sessionMemory.item]['response']
+
+    console.log("from launchProto_functions.js : "+ record.length );
+    console.log(record[record.length -1]['reply']); 
+    return "前に " + record[record.length -1]['reply'] + "って言ってたけど、他に" ;   
+    
+}
