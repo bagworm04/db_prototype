@@ -21,7 +21,7 @@ const LaunchRequestHandler = {
 	var speechText          = "テキスト";
 	
 	if(emptyNum >= 0){
-	    sessionMemory.intent  = functions.setIntent('BasicIntent');
+	    sessionMemory.intent  = functions.setIntent('AnythingIntent');
 	    sessionMemory.genre   = functions.setGenre('myself');
 	    sessionMemory.item    = emptyNum;
 	    speechText            = speechText_first + functions.getQuestion(persistentMemory, sessionMemory.genre, emptyNum);
@@ -30,7 +30,8 @@ const LaunchRequestHandler = {
 	    sessionMemory.genre   = functions.setGenre(persistentMemory);
 	    sessionMemory.item    = functions.getItemNum(persistentMemory, sessionMemory.genre);
 
-	    if(persistentMemory[sessionMemory.genre][sessionMemory.item]['response'].length != 0){ //前回記録があるとき
+	    var tmpResponse       = persistentMemory[sessionMemory.genre][sessionMemory.item]['response'];
+	    if(tmpResponse.length != 0 && tmpResponse[tmpResponse.length -1]['reply'] !== 'なし' ){ //前回記録があるとき && "なし"じゃないとき
 		speechText_first  = functions.getLastRecord(persistentMemory, sessionMemory); 
 	    }
 	    
@@ -52,34 +53,6 @@ const LaunchRequestHandler = {
 };
 
 
-const BasicIntentHandler = {
-    canHandle(handlerInput){
-	const sessionMemory = handlerInput.attributesManager.getSessionAttributes();
-	return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' && sessionMemory.intent === 'BasicIntent';
-    },
-    async handle(handlerInput){
-	console.log("basicIntent");
-	var persistentMemory      = await handlerInput.attributesManager.getPersistentAttributes(); //DBからデータの取得
-	var sessionMemory         = handlerInput.attributesManager.getSessionAttributes();
-
-	var response   = basicResponse.getResponse(persistentMemory, handlerInput.requestEnvelope.request.intent.slots, sessionMemory);
-	var speechText = response + "ですね。教えていただきありがとうございます。";
-
-	var newJSON    = functions.createNewDB(persistentMemory, sessionMemory, response);
-	handlerInput.attributesManager.setPersistentAttributes(newJSON);
-	await handlerInput.attributesManager.savePersistentAttributes();
-
-	var aplJSON = apl.createView(speechText);
-	
-	return handlerInput.responseBuilder
-	    .addDirective(aplJSON)
-	    .speak(speechText)
-	    //.reprompt(speechText)
-	    .withShouldEndSession(true)
-	    .getResponse();
-    }
-};
-
 
 
 const AnythingIntentHandler = {
@@ -93,10 +66,18 @@ const AnythingIntentHandler = {
 	var sessionMemory         = handlerInput.attributesManager.getSessionAttributes();
 
 	
-	var response   = functions.getResponse(persistentMemory, handlerInput.requestEnvelope.request.intent.slots, sessionMemory);
-	var speechText = response + "ですね。教えていただきありがとうございます。";
+	var reply   = functions.getResponse(persistentMemory, handlerInput.requestEnvelope.request.intent.slots, sessionMemory);
+
+	var speechText_first = "";
+	if(reply === 'なし'){
+	    speechText_first = "わかりました。";
+	}else{
+	    speechText_first = reply + "ですね。";
+	}
 	
-	var newJSON    = functions.createNewDB(persistentMemory, sessionMemory, response);
+	var speechText = speechText_first + "教えていただきありがとうございます。";
+	
+	var newJSON    = functions.createNewDB(persistentMemory, sessionMemory, reply);
 	handlerInput.attributesManager.setPersistentAttributes(newJSON);
 	await handlerInput.attributesManager.savePersistentAttributes();
 	
@@ -178,7 +159,7 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
 	LaunchRequestHandler,
-	BasicIntentHandler,
+//	BasicIntentHandler,
 	AnythingIntentHandler,
 	CancelAndStopIntentHandler,
 	SessionEndedRequestHandler,

@@ -88,9 +88,10 @@ function setItemNum(persistentMemory, genre){
     for(var i=0; i<persistentMemory[genre].length; i++){
     if(persistentMemory[genre][i]['response'].length == 0) return i;
   }
-  //すべての項目の返答が埋まっていた場合はランダムな項目番号を返す
-  var randomNum = randomInt(persistentMemory[genre].length);
-  return randomNum;
+    //廃止予定("なし"が取れない）
+    //すべての項目の返答が埋まっていた場合はランダムな項目番号を返す
+    var randomNum = randomInt(persistentMemory[genre].length);
+    return randomNum;
 };
 
 
@@ -105,7 +106,7 @@ module.exports.getQuestion = function(persistentMemory, genre, item){
     var secondPhrase  = persistentMemory[genre][item]['secondPhrase'];
     console.log('from launchProto_functions : firstPhrase =' + firstPhrase +' secondPhrase = '+secondPhrase);
     
-    return firstPhrase + 'は' + secondPhrase +'ですか？';
+    return firstPhrase + 'は' + secondPhrase +'？';
 };
 
 
@@ -132,10 +133,15 @@ module.exports.getResponse = function(persistentMemory, responseJSON, sessionMem
     for(key in responseJSON){
 	if('value' in responseJSON[key]){
 	    console.log("from launchProto_function.js : " + JSON.stringify(responseJSON[key]['value']));
-	    return responseJSON[key]['value'];
+
+	    if(key === 'notSlot'){
+		return 'なし';
+	    }else{
+		return responseJSON[key]['value'];
+	    }
 	}
     }
-    return null;
+    return 'なし';
 }
 
 module.exports.getLastRecord = function(persistentMemory, sessionMemory){
@@ -143,6 +149,6 @@ module.exports.getLastRecord = function(persistentMemory, sessionMemory){
 
     console.log("from launchProto_functions.js : "+ record.length );
     console.log(record[record.length -1]['reply']); 
-    return "前に " + record[record.length -1]['reply'] + "って言ってたけど、他に" ;   
     
+    return "前に " + record[record.length -1]['reply'] + "って言ってたけど、他に" ;   
 }
