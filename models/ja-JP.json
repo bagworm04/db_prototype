@@ -53,6 +53,10 @@
                         {
                             "name": "bloodtype",
                             "type": "bloodtype"
+                        },
+			{
+                            "name": "yesSlot",
+                            "type": "yes"
                         }
                     ],
 		    "samples": [
@@ -61,6 +65,7 @@
 			"{food} です",
 			"{food}",
                         "{notSlot}",
+			"{yesSlot}",
 			"{place} 区",
                         "{place} 村",
                         "{place} 町",
@@ -80,15 +85,7 @@
                         "{bloodtype} だよ",
                         "{bloodtype} です"
                     ]
-		},
-		{
-                    "name": "AMAZON.YesIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.NoIntent",
-                    "samples": []
-                }
+		}
             ],
 	    "types": [
                 {
@@ -151,6 +148,136 @@
                         }
                     ]
                 },
+		{
+                    "name": "yes",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "そう"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "そうだね"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "うん"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "たのみます"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "頼みます"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "よろしく"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "宜しくお願いします"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "お願い"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "おねがい"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "お願いします"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "希望"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "希望します"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "やってください"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "してください"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "して"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "やって"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "します"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "する"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "あり"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "あってます"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "合っています"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "ありです"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "そうです"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "あります"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "はい"
+                            }
+                        }
+		    ]
+		},
                 {
                     "name": "Sibiling",
                     "values": [
