@@ -56,9 +56,13 @@ module.exports.hasEmptyContentInMyself = function(json){
       var nowDate = new Date();
       nowDate.setTime(nowDate.getTime() + 1000*60*60*9);// JSTに変換
       nowDateFormat = dateFormat(nowDate);
+      
+      
       console.log("from launchProto_function: dateFormat nowDay : "  +  nowDateFormat);
       console.log("from launchProto_function: dateFormat pastDay : " +  myselfResponse[myselfResponse.length -1]['time']);
       console.log("from launchProto_function: dateFormat diffDay : " +  diffDay(nowDate, myselfResponse[myselfResponse.length -1]['time']));
+      
+
       if(diffDay(nowDate, myselfResponse[myselfResponse.length -1]['time']) > 4 ) {
         return i;
       }
@@ -188,7 +192,7 @@ module.exports.getLastRecord = function(persistentMemory, sessionMemory){
 }
 
 function dateFormat(date){
-  return date.getFullYear() + "/" +date.getMonth() + "/" + date.getDate() + " " + date.getHours() + ":" +date.getMinutes() + ":" +date.getSeconds() ;
+    return date.getFullYear() + "/" + (date.getMonth()+1) + "/" + date.getDate() + " " + date.getHours() + ":" +date.getMinutes() + ":" +date.getSeconds() ;
 }
 
 function diffDay(newDay, pastDay){
