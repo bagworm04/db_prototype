@@ -42,10 +42,10 @@ const LaunchRequestHandler = {
 	handlerInput.attributesManager.setSessionAttributes(sessionMemory);
 	var aplJSON = apl.createView(speechText);
 
-	console.log(aplJSON);
-	
+	//console.log(aplJSON);
+	console.log("from index.js : handlerInput.context.system.device.supportedInterface : " + handlerInput.context.System.device.supportedInterfaces);
 	return handlerInput.responseBuilder
-	    .addDirective(aplJSON)
+	    //.addDirective(aplJSON)
 	    .speak(speechText)
 	    .reprompt(speechText)
 	    .getResponse();
