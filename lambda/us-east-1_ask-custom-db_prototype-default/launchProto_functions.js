@@ -196,9 +196,11 @@ function dateFormat(date){
 }
 
 function diffDay(newDay, pastDay){
-  var pastDayFormat = new Date(pastDay);
-  var diffTime = newDay.getTime() - pastDayFormat.getTime();
-  return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    var pastDayFormat = new Date(pastDay);
+    console.log("from launchProto_functions.js : diffDay : pastDayFormat :" + pastDayFormat );
+    var diffTime = newDay.getTime() - pastDayFormat.getTime();
+    console.log("from launchProto_functions.js : diffDay :diffTime :" + diffTime );
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24));
 }
 
 module.exports.getdiffDay = function(newDay, pastDay){

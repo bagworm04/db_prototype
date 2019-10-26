@@ -4,7 +4,7 @@ const functions = require('./launchProto_functions.js');
 const apl 	= require('./launchProto_apl.js');
 const basicResponse  = require('./launchProto_basicIntentResponse.js');
 
-const config          ={tableName: 'db_prototype', createTable: true};
+const config          ={tableName:'db_prototype',createTable:true};
 const DynamoDBAdapter = new Adapter.DynamoDbPersistenceAdapter(config);
 
 const LaunchRequestHandler = {
@@ -12,13 +12,32 @@ const LaunchRequestHandler = {
 	return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     async handle(handlerInput){
-	const persistentMemory      = await handlerInput.attributesManager.getPersistentAttributes(); //DBからデータの取得
-
+	var speechText          = "こんにちは";
 	
+	const persistentMemory      = await handlerInput.attributesManager.getPersistentAttributes(); //DBからデータの取得
+	console.log("from index.js : persistentMemory : " + persistentMemory);
+	console.log("from index.js : persistentMemory_string : " + JSON.stringify(persistentMemory));
+	console.log("from index.js : persistentMemory_length : " + persistentMemory.length);
+	console.log("from index.js : persistentMemory_length : " + Object.keys(persistentMemory).length);
+	
+
+	if(Object.keys(persistentMemory).length === 0){
+	    console.log("from index.js : persistentMemory === undefined ");
+	    var newJSON    = require('./newData.js').initialJSON;
+	    handlerInput.attributesManager.setPersistentAttributes(newJSON);
+	    await handlerInput.attributesManager.savePersistentAttributes();
+	    
+	    return handlerInput.responseBuilder
+	    //.addDirective(aplJSON)
+		.speak(speechText)
+	    //.reprompt(speechText)
+		.withShouldEndSession(true)
+	    	.getResponse();
+	    
+	}
 	var emptyNum              = functions.hasEmptyContentInMyself(persistentMemory); //myself内で未回答の項目番号を取得。なければ-1
 	const sessionMemory       = handlerInput.attributesManager.getSessionAttributes();
 	var speechText_first    = "こんにちは。";
-	var speechText          = "テキスト";
 	
 	if(emptyNum >= 0){
 	    sessionMemory.intent  = functions.setIntent('AnythingIntent');
@@ -41,11 +60,11 @@ const LaunchRequestHandler = {
 	
 	handlerInput.attributesManager.setSessionAttributes(sessionMemory);
 	var aplJSON = apl.createView(speechText);
-
-	//console.log(aplJSON);
-	console.log("from index.js : handlerInput.context.system.device.supportedInterface : " + handlerInput.context.System.device.supportedInterfaces);
+	
+	//console.log(aplJSON);	
+	console.log("from index.js : handlerInput : " + JSON.stringify(handlerInput));
 	return handlerInput.responseBuilder
-	    //.addDirective(aplJSON)
+	//.addDirective(aplJSON)
 	    .speak(speechText)
 	    .reprompt(speechText)
 	    .getResponse();
@@ -85,7 +104,7 @@ const AnythingIntentHandler = {
 	var aplJSON = apl.createView(speechText);
 	
 	return handlerInput.responseBuilder
-	    .addDirective(aplJSON)
+	    //.addDirective(aplJSON)
 	    .speak(speechText)
 	    //.reprompt(speechText)
 	    .withShouldEndSession(true)
@@ -159,7 +178,7 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
 	LaunchRequestHandler,
-//	BasicIntentHandler,
+	//	BasicIntentHandler,
 	AnythingIntentHandler,
 	CancelAndStopIntentHandler,
 	SessionEndedRequestHandler,
@@ -170,8 +189,9 @@ exports.handler = Alexa.SkillBuilders.custom()
 	ErrorHandler,
     )
     .lambda();
-
+/*
 const AWS = require('aws-sdk');
 const dynamo = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = (event, context, callback) => {
+*/
