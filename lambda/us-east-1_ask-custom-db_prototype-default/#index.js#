@@ -41,11 +41,10 @@ const LaunchRequestHandler = {
 	    	    .withShouldEndSession(true)
 	    	    .getResponse();
 	    }
-	    
 	}
 	var emptyNum              = functions.hasEmptyContentInMyself(persistentMemory); //myself内で未回答の項目番号を取得。なければ-1
 	const sessionMemory       = handlerInput.attributesManager.getSessionAttributes();
-	var speechText_first    = "こんにちは。";
+	var speechText_first      = "こんにちは。";
 	
 	if(emptyNum >= 0){
 	    sessionMemory.intent  = functions.setIntent('AnythingIntent');
@@ -82,8 +81,7 @@ const LaunchRequestHandler = {
 		    .speak(speechText)
 		    .reprompt(speechText)
 	    	    .getResponse();
-	    }
-	
+	    }	
     }
 };
 
@@ -99,7 +97,6 @@ const AnythingIntentHandler = {
 	console.log("anythingIntent");
 	var persistentMemory      = await handlerInput.attributesManager.getPersistentAttributes(); //DBからデータの取得
 	var sessionMemory         = handlerInput.attributesManager.getSessionAttributes();
-
 	
 	var reply   = functions.getResponse(persistentMemory, handlerInput.requestEnvelope.request.intent.slots, sessionMemory);
 
