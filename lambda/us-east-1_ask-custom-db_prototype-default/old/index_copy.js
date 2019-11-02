@@ -13,9 +13,9 @@ const LaunchRequestHandler = {
     },
     async handle(handlerInput){
 	console.log("from index.js : handlerInput : " + JSON.stringify(handlerInput));
-	
+
 	var speechText          = "はじめまして!";
-	
+
 	const persistentMemory      = await handlerInput.attributesManager.getPersistentAttributes(); //DBからデータの取得
 
 	//初回起動時
@@ -34,18 +34,19 @@ const LaunchRequestHandler = {
 	    	    .getResponse();
 	    }else{
 		var aplJSON = apl.createView(speechText);
-			
+
 		return handlerInput.responseBuilder
 		    .addDirective(aplJSON)
 		    .speak(speechText)
 	    	    .withShouldEndSession(true)
 	    	    .getResponse();
 	    }
+
 	}
 	var emptyNum              = functions.hasEmptyContentInMyself(persistentMemory); //myself内で未回答の項目番号を取得。なければ-1
 	const sessionMemory       = handlerInput.attributesManager.getSessionAttributes();
-	var speechText_first      = "こんにちは。";
-	
+	var speechText_first    = "こんにちは。";
+
 	if(emptyNum >= 0){
 	    sessionMemory.intent  = functions.setIntent('AnythingIntent');
 	    sessionMemory.genre   = functions.setGenre('myself');
@@ -58,13 +59,13 @@ const LaunchRequestHandler = {
 
 	    var tmpResponse       = persistentMemory[sessionMemory.genre][sessionMemory.item]['response'];
 	    if(tmpResponse.length != 0 && tmpResponse[tmpResponse.length -1]['reply'] !== 'なし' ){ //前回記録があるとき && "なし"じゃないとき
-		speechText_first  = functions.getLastRecord(persistentMemory, sessionMemory); 
+		speechText_first  = functions.getLastRecord(persistentMemory, sessionMemory);
 	    }
-	    
+
 	    speechText            =  speechText_first + functions.getQuestion(persistentMemory, sessionMemory.genre, sessionMemory.item);
 	    console.log(speechText);
 	}
-	
+
 	handlerInput.attributesManager.setSessionAttributes(sessionMemory);
 
 	//display非対応
@@ -75,13 +76,14 @@ const LaunchRequestHandler = {
 		    .getResponse();
 	    }else{
 		var aplJSON = apl.createView(speechText);
-			
+
 		return handlerInput.responseBuilder
 		    .addDirective(aplJSON)
 		    .speak(speechText)
 		    .reprompt(speechText)
 	    	    .getResponse();
-	    }	
+	    }
+
     }
 };
 
@@ -97,7 +99,8 @@ const AnythingIntentHandler = {
 	console.log("anythingIntent");
 	var persistentMemory      = await handlerInput.attributesManager.getPersistentAttributes(); //DBからデータの取得
 	var sessionMemory         = handlerInput.attributesManager.getSessionAttributes();
-	
+
+
 	var reply   = functions.getResponse(persistentMemory, handlerInput.requestEnvelope.request.intent.slots, sessionMemory);
 
 	var speechText_first = "";
@@ -106,28 +109,34 @@ const AnythingIntentHandler = {
 	}else{
 	    speechText_first = reply + "ですね。";
 	}
-	
+
 	var speechText = speechText_first + "教えていただきありがとうございます。";
-	
+
 	var newJSON    = functions.createNewDB(persistentMemory, sessionMemory, reply);
 	handlerInput.attributesManager.setPersistentAttributes(newJSON);
 	await handlerInput.attributesManager.savePersistentAttributes();
-	
+
+	/*
 	//display非対応
 	    if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0){
 		return handlerInput.responseBuilder
 		    .speak(speechText)
-	    	    .withShouldEndSession(true)
+		    .withShouldEndSession(true)
 	    	    .getResponse();
 	    }else{
 		var aplJSON = apl.createView(speechText);
-			
+
 		return handlerInput.responseBuilder
 		    .addDirective(aplJSON)
 		    .speak(speechText)
 		    .withShouldEndSession(true)
 	    	    .getResponse();
-	    }	
+	    }
+	*/
+
+
+
+
     }
 };
 
@@ -167,7 +176,7 @@ const IntentReflectorHandler = {
     handle(handlerInput) {
 	const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
 	const speechText = `You just triggered ${intentName}`;
-	
+
 	return handlerInput.responseBuilder
 	    .speak(speechText)
 	//.reprompt('add a reprompt if you want to keep the session open for the user to respond')
@@ -185,7 +194,7 @@ const ErrorHandler = {
     handle(handlerInput, error) {
 	console.log(`~~~~ Error handled: ${error.stack}`);
 	const speechText = "Sorry, I had trouble doing what you asked. Please try again.";
-	
+
 	return handlerInput.responseBuilder
 	    .speak(speechText)
 	    .reprompt(speechText)
