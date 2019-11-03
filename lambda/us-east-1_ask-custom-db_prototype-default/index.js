@@ -16,8 +16,8 @@ const LaunchRequestHandler = {
 
     //初回かどうかの判定
     if(Object.keys(persistentMemory).length === 0){
-      var newJSON = require('./newData.js').initialJSON;
-      speechText  = "きょうからよろしくお願いします!"
+      var newJSON = require('./testData.js').initialJSON;
+      speechText  = '今日からよろしくお願いします!';
 
       handlerInput.attributesManager.setPersistentAttributes(newJSON);
       await handlerInput.attributesManager.savePersistentAttributes();
@@ -45,9 +45,10 @@ const LaunchRequestHandler = {
     sessionMemory = functions.searchQuestionElement(sessionMemory, persistentMemory);
     handlerInput.attributesManager.setSessionAttributes(sessionMemory);
 
-    speechText = functions.getQuestion(persistentMemory, sessionMemory.genre, sessionMemory.item);
-
-    console.log("from index.js : speechText = " + speechText);
+    console.log(JSON.stringify(persistentMemory));
+    var name        = functions.getUserName(persistentMemory);
+    var firstPhrase = name + '<break time="0.5s"/>' + "おはようございます!" + '<break time="0.5s"/>';
+    speechText = firstPhrase + functions.getQuestion(persistentMemory, sessionMemory.genre, sessionMemory.item);
 
     //display非対応
     if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0){
@@ -86,15 +87,15 @@ const AnythingIntentHandler = {
     await handlerInput.attributesManager.savePersistentAttributes();
 
 
-    var speechText_first = "";
+    var speechText_first = "初期値です";
     if(reply === 'なし'){
       speechText_first = "わかりました。";
     }else{
-      speechText_first = reply + "ですね。";
+      //speechText_first = reply + "ですね。";
+      var speechText_first = reply + "ですか。" + require('./getAPIResponse.js').getAPIResponse(reply) + '<break time = "0.5s"/>';
     }
 
-    //会話の継続を判定
-    if(sessionMemory.count === 0){
+    if(sessionMemory.count === 0){    //会話の継続を判定
       var speechText = speechText_first + "教えていただきありがとうございました。";
       handlerInput.attributesManager.setSessionAttributes(sessionMemory);
       //display非対応
@@ -119,7 +120,7 @@ const AnythingIntentHandler = {
       sessionMemory = functions.searchQuestionElement(sessionMemory, persistentMemory);
       handlerInput.attributesManager.setSessionAttributes(sessionMemory);
 
-      var result      = speechText_first + "教えていただきありがとうございます。";
+      var result      = speechText_first + "あ、それと"
       var speechText  = result + functions.getQuestion(persistentMemory, sessionMemory.genre, sessionMemory.item);
 
       //display非対応

@@ -1,374 +1,374 @@
 {
-    "interactionModel": {
-        "languageModel": {
-            "invocationName": "データベース",
-            "intents": [
-                {
-                    "name": "AMAZON.CancelIntent",
-                    "samples": [
-                        "キャンセルして"
-                    ]
-                },
-                {
-                    "name": "AMAZON.HelpIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.StopIntent",
-                    "samples": [
-                        "ストップして"
-                    ]
-                },
-		{
-		    "name": "AnythingIntent",
-		    "slots": [
-                        {
-                            "name": "notSlot",
-                            "type": "not"
-                        },
-                        {
-                            "name": "food",
-                            "type": "AMAZON.Food"
-                        },
-			{
-			    "name": "musician",
-			    "type": "AMAZON.Musician"
-			},
-			{
-                            "name": "year",
-                            "type": "AMAZON.FOUR_DIGIT_NUMBER"
-                        },
-                        {
-                            "name": "date",
-                            "type": "AMAZON.DATE"
-                        },
-                        {
-                            "name": "place",
-                            "type": "AMAZON.City"
-                        },
-                        {
-                            "name": "sibiling",
-                            "type": "Sibiling"
-                        },
-                        {
-                            "name": "bloodtype",
-                            "type": "bloodtype"
-                        },
-			{
-                            "name": "yesSlot",
-                            "type": "yes"
-                        }
-                    ],
-		    "samples": [
-			"{musician} です",
-			"{musician}",
-			"{food} です",
-			"{food}",
-                        "{notSlot}",
-			"{yesSlot}",
-			"{place} 区",
-                        "{place} 村",
-                        "{place} 町",
-                        "{place} 市",
-                        "{place} 県",
-                        "{date} 月",
-                        "{date} 月 {date} 日",
-                        "{year} 年です",
-                        "{year} 年",
-                        "{sibiling} います",
-                        "{sibiling} いる",
-                        "{sibiling} いるよ",
-                        "{sibiling} がいます",
-                        "{sibiling} です",
-                        "{sibiling}",
-                        "{bloodtype}",
-                        "{bloodtype} だよ",
-                        "{bloodtype} です"
-                    ]
-		}
-            ],
-	    "types": [
-                {
-                    "name": "not",
-                    "values": [
-                        {
-                            "name": {
-                                "value": "やらないで"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "しないで"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "しません"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "しない"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "なし"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "ない"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "違います"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "いません"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "ないです"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "ありません"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "いいえ"
-                            }
-                        }
-                    ]
-                },
-		{
-                    "name": "yes",
-                    "values": [
-                        {
-                            "name": {
-                                "value": "そう"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "そうだね"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "うん"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "たのみます"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "頼みます"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "よろしく"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "宜しくお願いします"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "お願い"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "おねがい"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "お願いします"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "希望"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "希望します"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "やってください"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "してください"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "して"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "やって"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "します"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "する"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "あり"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "あってます"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "合っています"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "ありです"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "そうです"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "あります"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "はい"
-                            }
-                        }
-		    ]
-		},
-                {
-                    "name": "Sibiling",
-                    "values": [
-                        {
-                            "name": {
-                                "value": "お姉さん"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "お兄さん"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "お兄ちゃん"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "お姉ちゃん"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "姉"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "兄"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "妹"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "弟"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "bloodtype",
-                    "values": [
-                        {
-                            "name": {
-                                "value": "AB"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "O"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "B"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "A"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "O型"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "AB型"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "B型"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "A型"
-                            }
-                        }
-                    ]
-                }
-            ]
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "データベース",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": [
+            "キャンセルして"
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": [
+            "ストップして"
+          ]
+        },
+        {
+          "name": "AnythingIntent",
+          "slots": [
+            {
+              "name": "notSlot",
+              "type": "not"
+            },
+            {
+              "name": "food",
+              "type": "AMAZON.Food"
+            },
+            {
+              "name": "musician",
+              "type": "AMAZON.Musician"
+            },
+            {
+              "name": "year",
+              "type": "AMAZON.FOUR_DIGIT_NUMBER"
+            },
+            {
+              "name": "date",
+              "type": "AMAZON.DATE"
+            },
+            {
+              "name": "place",
+              "type": "AMAZON.City"
+            },
+            {
+              "name": "sibiling",
+              "type": "Sibiling"
+            },
+            {
+              "name": "bloodtype",
+              "type": "bloodtype"
+            },
+            {
+              "name": "yesSlot",
+              "type": "yes"
+            }
+          ],
+          "samples": [
+            "{musician} です",
+            "{musician}",
+            "{food} です",
+            "{food}",
+            "{notSlot}",
+            "{yesSlot}",
+            "{place} 区",
+            "{place} 村",
+            "{place} 町",
+            "{place} 市",
+            "{place} 県",
+            "{date} 月",
+            "{date} 月 {date} 日",
+            "{year} 年です",
+            "{year} 年",
+            "{sibiling} います",
+            "{sibiling} いる",
+            "{sibiling} いるよ",
+            "{sibiling} がいます",
+            "{sibiling} です",
+            "{sibiling}",
+            "{bloodtype}",
+            "{bloodtype} だよ",
+            "{bloodtype} です"
+          ]
         }
+      ],
+      "types": [
+        {
+          "name": "not",
+          "values": [
+            {
+              "name": {
+                "value": "やらないで"
+              }
+            },
+            {
+              "name": {
+                "value": "しないで"
+              }
+            },
+            {
+              "name": {
+                "value": "しません"
+              }
+            },
+            {
+              "name": {
+                "value": "しない"
+              }
+            },
+            {
+              "name": {
+                "value": "なし"
+              }
+            },
+            {
+              "name": {
+                "value": "ない"
+              }
+            },
+            {
+              "name": {
+                "value": "違います"
+              }
+            },
+            {
+              "name": {
+                "value": "いません"
+              }
+            },
+            {
+              "name": {
+                "value": "ないです"
+              }
+            },
+            {
+              "name": {
+                "value": "ありません"
+              }
+            },
+            {
+              "name": {
+                "value": "いいえ"
+              }
+            }
+          ]
+        },
+        {
+          "name": "yes",
+          "values": [
+            {
+              "name": {
+                "value": "そう"
+              }
+            },
+            {
+              "name": {
+                "value": "そうだね"
+              }
+            },
+            {
+              "name": {
+                "value": "うん"
+              }
+            },
+            {
+              "name": {
+                "value": "たのみます"
+              }
+            },
+            {
+              "name": {
+                "value": "頼みます"
+              }
+            },
+            {
+              "name": {
+                "value": "よろしく"
+              }
+            },
+            {
+              "name": {
+                "value": "宜しくお願いします"
+              }
+            },
+            {
+              "name": {
+                "value": "お願い"
+              }
+            },
+            {
+              "name": {
+                "value": "おねがい"
+              }
+            },
+            {
+              "name": {
+                "value": "お願いします"
+              }
+            },
+            {
+              "name": {
+                "value": "希望"
+              }
+            },
+            {
+              "name": {
+                "value": "希望します"
+              }
+            },
+            {
+              "name": {
+                "value": "やってください"
+              }
+            },
+            {
+              "name": {
+                "value": "してください"
+              }
+            },
+            {
+              "name": {
+                "value": "して"
+              }
+            },
+            {
+              "name": {
+                "value": "やって"
+              }
+            },
+            {
+              "name": {
+                "value": "します"
+              }
+            },
+            {
+              "name": {
+                "value": "する"
+              }
+            },
+            {
+              "name": {
+                "value": "あり"
+              }
+            },
+            {
+              "name": {
+                "value": "あってます"
+              }
+            },
+            {
+              "name": {
+                "value": "合っています"
+              }
+            },
+            {
+              "name": {
+                "value": "ありです"
+              }
+            },
+            {
+              "name": {
+                "value": "そうです"
+              }
+            },
+            {
+              "name": {
+                "value": "あります"
+              }
+            },
+            {
+              "name": {
+                "value": "はい"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sibiling",
+          "values": [
+            {
+              "name": {
+                "value": "お姉さん"
+              }
+            },
+            {
+              "name": {
+                "value": "お兄さん"
+              }
+            },
+            {
+              "name": {
+                "value": "お兄ちゃん"
+              }
+            },
+            {
+              "name": {
+                "value": "お姉ちゃん"
+              }
+            },
+            {
+              "name": {
+                "value": "姉"
+              }
+            },
+            {
+              "name": {
+                "value": "兄"
+              }
+            },
+            {
+              "name": {
+                "value": "妹"
+              }
+            },
+            {
+              "name": {
+                "value": "弟"
+              }
+            }
+          ]
+        },
+        {
+          "name": "bloodtype",
+          "values": [
+            {
+              "name": {
+                "value": "AB"
+              }
+            },
+            {
+              "name": {
+                "value": "O"
+              }
+            },
+            {
+              "name": {
+                "value": "B"
+              }
+            },
+            {
+              "name": {
+                "value": "A"
+              }
+            },
+            {
+              "name": {
+                "value": "O型"
+              }
+            },
+            {
+              "name": {
+                "value": "AB型"
+              }
+            },
+            {
+              "name": {
+                "value": "B型"
+              }
+            },
+            {
+              "name": {
+                "value": "A型"
+              }
+            }
+          ]
+        }
+      ]
     }
+  }
 }
