@@ -1,4 +1,10 @@
 
+//maxを最大とするランダムな整数値を返す
+//例：max = 3 -> 0,1,2
+function randomInt(max){
+  return Math.floor(Math.random() * (max));
+}
+
 function createDB(persistentMemory,sessionMemory , newData){
   var reply = newJSON(newData);
 
@@ -23,7 +29,7 @@ module.exports.createNewDB = function(persistentMemory, sessionMemory, newData){
   let reply = {
     "reply": newData,
     "time" : JSON.stringify(date)
-  }
+  };
 
   persistentMemory[sessionMemory.genre][sessionMemory.item]['response'].push(reply);
   persistentMemory['count'] += 1;
@@ -31,6 +37,11 @@ module.exports.createNewDB = function(persistentMemory, sessionMemory, newData){
   console.log("from functions.js : " + JSON.stringify(persistentMemory));
   return persistentMemory;
 
+};
+
+//mrandomInte同様（外部から参照できる
+module.exports.getRandomInt = function(max){
+  return randomInte(max);
 };
 
 module.exports.getUserName = function( persistentMemory ){
@@ -49,6 +60,22 @@ module.exports.getUserName = function( persistentMemory ){
   return 'おやおや';
 };
 
+module.exports.getGreeting = function(middleResponse){
+  var greetings = middleResponse['greeting'];
+  var date = new Date();
+  var hours = date.getHours()-9;
+  console.log("from frunctions.js : hours :" + hours);
+  if(hours < 12){
+    var elementNum = greetings['morning'].length;
+    return greetings['morning'][randomInt(elementNum)];
+  }else if(hours < 18){
+    var elementNum = greetings['afternoon'].length;
+    return greetings['afternoon'][randomInt(elementNum)];
+  }else{
+    var elementNum = greetings['night'].length;
+    return greetings['night'][randomInt(elementNum)];
+  }
+}
 
 module.exports.searchQuestionElement = function(sessionMemory, persistentMemory){
   var denialArray = [];

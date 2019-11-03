@@ -1,7 +1,8 @@
-const Alexa     = require('ask-sdk-core');
-const Adapter   = require('ask-sdk-dynamodb-persistence-adapter');
-const functions = require('./functions.js');
-const apl 	= require('./apl.js');
+const Alexa          = require('ask-sdk-core');
+const Adapter        = require('ask-sdk-dynamodb-persistence-adapter');
+const functions      = require('./functions.js');
+const apl 	         = require('./apl.js');
+const middleResponse = require('./middleResponse.js').middleResponseJSON;
 
 const config          ={tableName:'db_prototype',createTable:true};
 const DynamoDBAdapter = new Adapter.DynamoDbPersistenceAdapter(config);
@@ -22,19 +23,12 @@ const LaunchRequestHandler = {
       handlerInput.attributesManager.setPersistentAttributes(newJSON);
       await handlerInput.attributesManager.savePersistentAttributes();
       //display非対応
-      if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0){
-        return handlerInput.responseBuilder
-        .speak(speechText)
-        .withShouldEndSession(true)
-        .getResponse();
+      if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0 || Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).toString() === "Geolocation" ){
+        return handlerInput.responseBuilder.speak(speechText).withShouldEndSession(true).getResponse();
       }else{
         var aplJSON = apl.createView(speechText);
 
-        return handlerInput.responseBuilder
-        .addDirective(aplJSON)
-        .speak(speechText)
-        .withShouldEndSession(true)
-        .getResponse();
+        return handlerInput.responseBuilder.addDirective(aplJSON).speak(speechText).withShouldEndSession(true).getResponse();
       }
     }
 
@@ -45,25 +39,17 @@ const LaunchRequestHandler = {
     sessionMemory = functions.searchQuestionElement(sessionMemory, persistentMemory);
     handlerInput.attributesManager.setSessionAttributes(sessionMemory);
 
-    console.log(JSON.stringify(persistentMemory));
     var name        = functions.getUserName(persistentMemory);
-    var firstPhrase = name + '<break time="0.5s"/>' + "おはようございます!" + '<break time="0.5s"/>';
+    var firstPhrase = name + '<break time="0.5s"/>' + functions.getGreeting(middleResponse) + '<break time="0.5s"/>';
     speechText = firstPhrase + functions.getQuestion(persistentMemory, sessionMemory.genre, sessionMemory.item);
 
     //display非対応
-    if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0){
-      return handlerInput.responseBuilder
-      .speak(speechText)
-      .reprompt(speechText)
-      .getResponse();
+    if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0 || Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).toString() === "Geolocation" ){
+      return handlerInput.responseBuilder.speak(speechText).reprompt(speechText).getResponse();
     }else{
       var aplJSON = apl.createView(speechText);
 
-      return handlerInput.responseBuilder
-      .addDirective(aplJSON)
-      .speak(speechText)
-      .reprompt(speechText)
-      .getResponse();
+      return handlerInput.responseBuilder.addDirective(aplJSON).speak(speechText).reprompt(speechText).getResponse();
     }
   }
 };
@@ -99,19 +85,12 @@ const AnythingIntentHandler = {
       var speechText = speechText_first + "教えていただきありがとうございました。";
       handlerInput.attributesManager.setSessionAttributes(sessionMemory);
       //display非対応
-      if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0){
-        return handlerInput.responseBuilder
-        .speak(speechText)
-        .withShouldEndSession(true)
-        .getResponse();
+      if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0 || Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).toString() === "Geolocation" ){
+        return handlerInput.responseBuilder.speak(speechText).withShouldEndSession(true).getResponse();
       }else{
         var aplJSON = apl.createView(speechText);
 
-        return handlerInput.responseBuilder
-        .addDirective(aplJSON)
-        .speak(speechText)
-        .withShouldEndSession(true)
-        .getResponse();
+        return handlerInput.responseBuilder.addDirective(aplJSON).speak(speechText).withShouldEndSession(true).getResponse();
       }
     }else{
       sessionMemory.count -= 1;
@@ -124,19 +103,12 @@ const AnythingIntentHandler = {
       var speechText  = result + functions.getQuestion(persistentMemory, sessionMemory.genre, sessionMemory.item);
 
       //display非対応
-      if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0){
-        return handlerInput.responseBuilder
-        .speak(speechText)
-        .reprompt(speechText)
-        .getResponse();
+      if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0  || Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).toString() === "Geolocation" ){
+        return handlerInput.responseBuilder.speak(speechText).reprompt(speechText).getResponse();
       }else{
         var aplJSON = apl.createView(speechText);
 
-        return handlerInput.responseBuilder
-        .addDirective(aplJSON)
-        .speak(speechText)
-        .reprompt(speechText)
-        .getResponse();
+        return handlerInput.responseBuilder.addDirective(aplJSON).speak(speechText).reprompt(speechText).getResponse();
       }
     }
 
