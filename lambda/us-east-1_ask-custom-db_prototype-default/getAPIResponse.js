@@ -14,7 +14,7 @@ module.exports.getAPIResponse = function(keyword){
           //console.log(`BODY: ${chunk}`);
           obj = JSON.parse(chunk);
           //console.log(obj);
-          console.log(obj.result);
+          console.log("from getAPIResponse.js : obj.result : " + obj.result);
           response = obj.result;
       });
       res.on('end', () => {

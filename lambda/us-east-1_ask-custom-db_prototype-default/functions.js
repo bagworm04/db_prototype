@@ -19,13 +19,15 @@ function diffTime(newDay, pastDay){
   // var pastDayFormat = new Date(pastDay);
   // console.log("from functions.js : diffTime : newDayFormat " + newDayFormat + " diffTime : pastDayFormat :" + pastDayFormat );
   // console.log("from functions.js : diffTime : newDayFormat.getTime() " + newDayFormat.getTime() + " diffTime : pastDayFormat.getTime() :" + pastDayFormat.getTime() );
-  console.log("from functions.js : diffTime : " + Math.floor((newDay- pastDay) / 1000 ));
+  // console.log("from functions.js : diffTime : " + Math.floor((newDay- pastDay) / 1000 ));
   return Math.floor((newDay- pastDay) / 1000 ); //秒
 }
 
 module.exports.createNewDB = function(persistentMemory, sessionMemory, newData){
-  var date = new Date();
-  date = date.getTime() + 1000*60*60*9;// JSTに変換
+  var original = new Date();
+  date = original.getTime() + 1000*60*60*9;// JSTに変換
+  var tmpDate = original;
+  // console.log("from functions.js: createNewDB : date(バージニア) : " + tmpDate.getMonth()+1 + "/" + tmpDate.getDay() + "/" + tmpDate.getHours() + "/" + tmpDate.getMinutes() + "/" + tmpDate.getSeconds());
   let reply = {
     "reply": newData,
     "time" : JSON.stringify(date)
@@ -41,7 +43,7 @@ module.exports.createNewDB = function(persistentMemory, sessionMemory, newData){
 
 //mrandomInte同様（外部から参照できる
 module.exports.getRandomInt = function(max){
-  return randomInte(max);
+  return randomInt(max);
 };
 
 module.exports.getUserName = function( persistentMemory ){
@@ -60,11 +62,14 @@ module.exports.getUserName = function( persistentMemory ){
   return 'おやおや';
 };
 
+//おはようございますなど
 module.exports.getGreeting = function(middleResponse){
   var greetings = middleResponse['greeting'];
   var date = new Date();
-  var hours = date.getHours()-9;
-  console.log("from frunctions.js : hours :" + hours);
+  var hours = (date.getHours()+9) % 24;
+  console.log("from frunctions.js : hours(日本) :" + hours);
+  // console.log("from functions.js: getGreeting : Date.now() : "+ date.getYear() + "/" +  date.getMonth()+1 + "/" + date.getDay() + "/" + date.getHours() + "/" + date.getMinutes() + "/" + date.getSeconds());
+
   if(hours < 12){
     var elementNum = greetings['morning'].length;
     return greetings['morning'][randomInt(elementNum)];
@@ -75,6 +80,28 @@ module.exports.getGreeting = function(middleResponse){
     var elementNum = greetings['night'].length;
     return greetings['night'][randomInt(elementNum)];
   }
+};
+
+//そういえば、そうそうなど
+module.exports.getMiddleDialogue = function(middleResponse){
+  var middleDialogue    = middleResponse['add'];
+  var elementNum        = middleDialogue.length;
+  return middleDialogue[randomInt(elementNum)];
+};
+
+//ありがとうございましたなど
+module.exports.getLastDialogue = function(middleResponse){
+  var lastDialogue   = middleResponse['thank'];
+  var elementNum     = lastDialogue.length;
+  return lastDialogue[randomInt(elementNum)];
+};
+
+module.exports.getCount = function(middleResponse, persistentMemory){
+  var count         = persistentMemory['count'];
+  var countDialogue = middleResponse['count'];
+  var firstPhrase   = countDialogue['firstPhrase'][randomInt(countDialogue['firstPhrase'].length)];
+  var secondPhrase  = countDialogue['secondPhrase'][randomInt(countDialogue['secondPhrase'].length)];
+  return firstPhrase + count + secondPhrase;
 }
 
 module.exports.searchQuestionElement = function(sessionMemory, persistentMemory){
@@ -82,13 +109,14 @@ module.exports.searchQuestionElement = function(sessionMemory, persistentMemory)
   var priorArray  = [];
   var genreArray  = ['myself','lifestyle','family','assets'];
 
+  //初回起動時(basicが埋まっていないとき)
   for(key in persistentMemory['basic']){
     if(persistentMemory['basic'][key]['response'].length === 0){
       sessionMemory.genre = 'basic';
       sessionMemory.item  = key;
       return sessionMemory;
     }
-  };
+  }
 
   //basic項目以外
   for(key in genreArray){
@@ -179,14 +207,19 @@ module.exports.getQuestion = function(persistentMemory, genre, item){
   return firstPhrase + 'は' + secondPhrase +'？';
 };
 
-module.exports.getLastAnswer = function(persistentMemory, genre, item){
-
+module.exports.getLastResponse = function(persistentMemory, sessionMemory, middleResponse){
+  var lookbackDialogue = middleResponse['lookback'];
+  var lastResponse = persistentMemory[sessionMemory.genre][sessionMemory.item]['response'];
+  if(lastResponse.length > 0){
+    return lookbackDialogue['firstPhrase'][randomInt(lookbackDialogue['firstPhrase'].length)] + lastResponse[lastResponse.length-1]['reply'] + lookbackDialogue['secondPhrase'][randomInt(lookbackDialogue['secondPhrase'].length)];
+  }else{
+    return " ";
+  }
 }
 
+
 module.exports.getResponse = function(persistentMemory, responseJSON, sessionMemory){
-
   // console.log(JSON.stringify(responseJSON));
-
   for(key in responseJSON){
     if('value' in responseJSON[key]){
       console.log("from launchProto_function.js : " + JSON.stringify(responseJSON[key]['value']));

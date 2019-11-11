@@ -25,6 +25,5 @@ module.exports.createView = function(text){
 	    }
 	}
     };
-    console.log(aplJSON);
     return aplJSON;
 };

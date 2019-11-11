@@ -1,4 +1,62 @@
 module.exports.initialJSON = {
+  "basic":[
+    {
+      "firstPhrase": "下の名前",
+      "response": [],
+      "secondPhrase": "なんですか"
+    },
+    {
+      "firstPhrase": "苗字",
+      "response": [],
+      "secondPhrase": "なんですか"
+    },
+    {
+      "firstPhrase": "普段の呼び名",
+      "response": [],
+      "secondPhrase": "なんですか"
+    },
+    {
+      "firstPhrase": "出身地",
+      "response": [      ],
+      "secondPhrase": "どこですか"
+    },
+    {
+      "firstPhrase": "住んでいる都道府県",
+      "response": [      ],
+      "secondPhrase": "どこですか"
+    },
+    {
+      "firstPhrase": "住んでいる市区町村",
+      "response": [      ],
+      "secondPhrase": "どこですか"
+    },
+    {
+      "firstPhrase": "生まれた西暦",
+      "response": [      ],
+      "secondPhrase": "何年ですか"
+    },
+    {
+      "firstPhrase": "生まれた月",
+      "response": [      ],
+      "secondPhrase": "何月ですか"
+    },
+    {
+      "firstPhrase": "生まれた日",
+      "response": [      ],
+      "secondPhrase": "何日ですか"
+    },
+    {
+      "firstPhrase": "血液型",
+      "response": [
+      ],
+      "secondPhrase": "何型ですか"
+    },
+    {
+      "firstPhrase": "自宅の電話",
+      "response": [      ],
+      "secondPhrase": "何番ですか"
+    }
+  ],
   "assets": [
     {
       "firstPhrase": "登録しているSNS",
@@ -11,9 +69,16 @@ module.exports.initialJSON = {
       "response": [
       ],
       "secondPhrase": "どこに保管していますか"
+    },
+    {
+      "firstPhrase": "登録しているインターネットのサイト",
+      "response": [
+      ],
+      "secondPhrase": "なんですか"
     }
+
   ],
-  "count": 0,
+  "count": 1,
   "family": [
     {
       "firstPhrase": "きょうだい",
@@ -97,24 +162,6 @@ module.exports.initialJSON = {
     }
   ],
   "myself": [
-    {
-      "firstPhrase": "誕生日の西暦",
-      "response": [
-      ],
-      "secondPhrase": "何年ですか",
-    },
-    {
-      "firstPhrase": "出身地",
-      "response": [
-      ],
-      "secondPhrase": "どこですか",
-    },
-    {
-      "firstPhrase": "血液型",
-      "response": [
-      ],
-      "secondPhrase": "何型ですか",
-    },
     {
       "firstPhrase": "アレルギー",
       "response": [

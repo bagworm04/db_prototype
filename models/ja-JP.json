@@ -57,9 +57,27 @@
             {
               "name": "yesSlot",
               "type": "yes"
+            },
+            {
+              "name": "address",
+              "type": "address"
+            },
+            {
+              "name": "month",
+              "type": "AMAZON.Month"
+            },
+            {
+              "name": "number",
+              "type": "AMAZON.NUMBER"
             }
           ],
           "samples": [
+            "{number}",
+            "{number} です",
+            "{month} です",
+            "{month}",
+            "{address} です",
+            "{address}",
             "{musician} です",
             "{musician}",
             "{food} です",
@@ -364,6 +382,26 @@
             {
               "name": {
                 "value": "A型"
+              }
+            }
+          ]
+        },
+        {
+          "name": "address",
+          "values": [
+            {
+              "name": {
+                "value": "上尾市"
+              }
+            },
+            {
+              "name": {
+                "value": "原市"
+              }
+            },
+            {
+              "name": {
+                "value": "埼玉県"
               }
             }
           ]

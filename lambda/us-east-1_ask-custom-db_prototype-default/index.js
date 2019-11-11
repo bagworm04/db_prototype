@@ -3,6 +3,7 @@ const Adapter        = require('ask-sdk-dynamodb-persistence-adapter');
 const functions      = require('./functions.js');
 const apl 	         = require('./apl.js');
 const middleResponse = require('./middleResponse.js').middleResponseJSON;
+const getAPIResponse = require('./getAPIResponse.js');
 
 const config          ={tableName:'db_prototype',createTable:true};
 const DynamoDBAdapter = new Adapter.DynamoDbPersistenceAdapter(config);
@@ -17,7 +18,7 @@ const LaunchRequestHandler = {
 
     //初回かどうかの判定
     if(Object.keys(persistentMemory).length === 0){
-      var newJSON = require('./testData.js').initialJSON;
+      var newJSON = require('./newData.js').initialJSON;
       speechText  = '今日からよろしくお願いします!';
 
       handlerInput.attributesManager.setPersistentAttributes(newJSON);
@@ -33,15 +34,18 @@ const LaunchRequestHandler = {
     }
 
     var sessionMemory     = handlerInput.attributesManager.getSessionAttributes();
-    sessionMemory.count     = 3 ;
+    sessionMemory.count     = functions.getRandomInt(6) +1 ;
+    console.log("from index.js : LaunchIntent : sessionMemory.count : " + sessionMemory.count);
     sessionMemory.intent    = 'AnythingIntent';
 
     sessionMemory = functions.searchQuestionElement(sessionMemory, persistentMemory);
     handlerInput.attributesManager.setSessionAttributes(sessionMemory);
 
     var name        = functions.getUserName(persistentMemory);
-    var firstPhrase = name + '<break time="0.5s"/>' + functions.getGreeting(middleResponse) + '<break time="0.5s"/>';
-    speechText = firstPhrase + functions.getQuestion(persistentMemory, sessionMemory.genre, sessionMemory.item);
+    var firstPhrase = name + '<break time="0.5s"/>' + functions.getGreeting(middleResponse) + '<break time="0.5s"/>' + functions.getCount(middleResponse, persistentMemory) + '<break time="0.5s"/>';
+    speechText = firstPhrase + functions.getLastResponse(persistentMemory, sessionMemory, middleResponse)  + functions.getQuestion(persistentMemory, sessionMemory.genre, sessionMemory.item);
+
+    console.log("from index.js : launchIntent :  speechText :" + speechText + "   , sessionMemory.count :" + sessionMemory.count );
 
     //display非対応
     if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0 || Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).toString() === "Geolocation" ){
@@ -72,18 +76,22 @@ const AnythingIntentHandler = {
     handlerInput.attributesManager.setPersistentAttributes(newJSON);
     await handlerInput.attributesManager.savePersistentAttributes();
 
+    console.log("from index.js : AnythingIntent : getPersistentAttributes");
 
+    //ユーザからの返答
     var speechText_first = "初期値です";
     if(reply === 'なし'){
       speechText_first = "わかりました。";
     }else{
       //speechText_first = reply + "ですね。";
-      var speechText_first = reply + "ですか。" + require('./getAPIResponse.js').getAPIResponse(reply) + '<break time = "0.5s"/>';
+      var speechText_first = reply + "ですか。" + getAPIResponse.getAPIResponse(reply) + '<break time = "0.5s"/>';
     }
 
     if(sessionMemory.count === 0){    //会話の継続を判定
-      var speechText = speechText_first + "教えていただきありがとうございました。";
+      var speechText = speechText_first + functions.getLastDialogue(middleResponse) + '<break time = "0.5s"/>';
       handlerInput.attributesManager.setSessionAttributes(sessionMemory);
+
+      console.log("from index.js : AnythingIntent :  speechText : lastSession : " + speechText);
       //display非対応
       if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0 || Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).toString() === "Geolocation" ){
         return handlerInput.responseBuilder.speak(speechText).withShouldEndSession(true).getResponse();
@@ -99,9 +107,10 @@ const AnythingIntentHandler = {
       sessionMemory = functions.searchQuestionElement(sessionMemory, persistentMemory);
       handlerInput.attributesManager.setSessionAttributes(sessionMemory);
 
-      var result      = speechText_first + "あ、それと"
-      var speechText  = result + functions.getQuestion(persistentMemory, sessionMemory.genre, sessionMemory.item);
+      var result      = speechText_first + functions.getMiddleDialogue(middleResponse) + '<break time = "0.5s"/>';
+      var speechText  = result + functions.getLastResponse(persistentMemory, sessionMemory, middleResponse) + functions.getQuestion(persistentMemory, sessionMemory.genre, sessionMemory.item);
 
+      console.log("from index.js : AnythingIntent :  speechText :" + speechText);
       //display非対応
       if(Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).length == 0  || Object.keys(handlerInput.requestEnvelope.context.System.device.supportedInterfaces).toString() === "Geolocation" ){
         return handlerInput.responseBuilder.speak(speechText).reprompt(speechText).getResponse();
